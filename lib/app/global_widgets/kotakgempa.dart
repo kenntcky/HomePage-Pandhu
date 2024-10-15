@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 
 class Kotakgempa extends StatelessWidget {
+
   const Kotakgempa({super.key});
 
   @override

@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "994508594804",
+    "firebase_url": "https://belajar-firebase-777-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "belajar-firebase-777",
+    "storage_bucket": "belajar-firebase-777.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:994508594804:android:96a398f36ae86cd2647b21",
+        "android_client_info": {
+          "package_name": "com.example.belajar_maps"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOSBn31MwWlUP35Aaw4Pmle7l2XylBH2g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:994508594804:android:8708868183cdda9d647b21",
+        "android_client_info": {
+          "package_name": "com.example.firebase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOSBn31MwWlUP35Aaw4Pmle7l2XylBH2g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:994508594804:android:a06a7302de939746647b21",
+        "android_client_info": {
+          "package_name": "com.sipandhu.aplikasi_pandhu"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOSBn31MwWlUP35Aaw4Pmle7l2XylBH2g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
