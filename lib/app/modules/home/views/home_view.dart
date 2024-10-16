@@ -80,7 +80,8 @@ class HomeView extends GetView<HomeController> {
                       filled: true,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide(width: 0, style: BorderStyle.none),
+                        borderSide:
+                            BorderSide(width: 0, style: BorderStyle.none),
                       ),
                     ),
                   ),
@@ -285,15 +286,16 @@ class HomeView extends GetView<HomeController> {
                             child: ListView(
                               scrollDirection: Axis.horizontal,
                               children: [
-                              Artikel(),
-                              SizedBox(
-                                width: 12,
-                              ),
-                              Artikel(),
-                              SizedBox(
-                                width: 12,
-                              ),
-                              Artikel()],
+                                Artikel(),
+                                SizedBox(
+                                  width: 12,
+                                ),
+                                Artikel(),
+                                SizedBox(
+                                  width: 12,
+                                ),
+                                Artikel()
+                              ],
                             ),
                           )
                         ],
@@ -324,14 +326,16 @@ class HomeView extends GetView<HomeController> {
                             )
                           ]),
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 15, vertical: 15),
                         child: Stack(
                           children: [
                             Row(
                               children: [
                                 Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Informasi Bantuan Gempa',
@@ -406,9 +410,8 @@ class HomeView extends GetView<HomeController> {
                     child: Container(
                       height: 158,
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10)
-                      ),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10)),
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
                         child: Row(
@@ -419,64 +422,65 @@ class HomeView extends GetView<HomeController> {
                               children: [
                                 Text.rich(
                                   TextSpan(
-                                      children: [
-                                          TextSpan(
-                                              text: 'Menemukan Kesalahan \ndi Aplikasi ',
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 20,
-                                                  fontFamily: 'Plus Jakarta Sans',
-                                                  fontWeight: FontWeight.w600,
-                                              ),
-                                          ),
-                                          TextSpan(
-                                              text: 'Pandhu?',
-                                              style: TextStyle(
-                                                  color: Color(0xFFF6643C),
-                                                  fontSize: 20,
-                                                  fontFamily: 'Plus Jakarta Sans',
-                                                  fontWeight: FontWeight.w600,
-                                              ),
-                                          ),
-                                      ],
+                                    children: [
+                                      TextSpan(
+                                        text:
+                                            'Menemukan Kesalahan \ndi Aplikasi ',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 20,
+                                          fontFamily: 'Plus Jakarta Sans',
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: 'Pandhu?',
+                                        style: TextStyle(
+                                          color: Color(0xFFF6643C),
+                                          fontSize: 20,
+                                          fontFamily: 'Plus Jakarta Sans',
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 SizedBox(
                                   height: 15,
                                 ),
                                 Text.rich(
-                                    TextSpan(
-                                        children: [
-                                            TextSpan(
-                                                text: 'Hubungi tim kami melalui ',
-                                                style: TextStyle(
-                                                    color: Color(0xFF636363),
-                                                    fontSize: 14,
-                                                    fontFamily: 'Plus Jakarta Sans',
-                                                    fontWeight: FontWeight.w400,
-                                                ),
-                                            ),
-                                            TextSpan(
-                                                text: 'email \n',
-                                                style: TextStyle(
-                                                    color: Color(0xFF636363),
-                                                    fontSize: 14,
-                                                    fontStyle: FontStyle.italic,
-                                                    fontFamily: 'Plus Jakarta Sans',
-                                                    fontWeight: FontWeight.w400,
-                                                ),
-                                            ),
-                                            TextSpan(
-                                                text: 'sipanduofficial@gmail.com',
-                                                style: TextStyle(
-                                                    color: Color(0xFF636363),
-                                                    fontSize: 14,
-                                                    fontFamily: 'Plus Jakarta Sans',
-                                                    fontWeight: FontWeight.w400,
-                                                ),
-                                            ),
-                                        ],
-                                    ),
+                                  TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: 'Hubungi tim kami melalui ',
+                                        style: TextStyle(
+                                          color: Color(0xFF636363),
+                                          fontSize: 14,
+                                          fontFamily: 'Plus Jakarta Sans',
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: 'email \n',
+                                        style: TextStyle(
+                                          color: Color(0xFF636363),
+                                          fontSize: 14,
+                                          fontStyle: FontStyle.italic,
+                                          fontFamily: 'Plus Jakarta Sans',
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: 'sipanduofficial@gmail.com',
+                                        style: TextStyle(
+                                          color: Color(0xFF636363),
+                                          fontSize: 14,
+                                          fontFamily: 'Plus Jakarta Sans',
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 )
                               ],
                             ),
@@ -496,10 +500,10 @@ class HomeView extends GetView<HomeController> {
                   Text(
                     'Powered by',
                     style: TextStyle(
-                    color: Color(0xFF666666),
-                    fontSize: 16,
-                    fontFamily: 'Plus Jakarta Sans',
-                    fontWeight: FontWeight.w600,
+                      color: Color(0xFF666666),
+                      fontSize: 16,
+                      fontFamily: 'Plus Jakarta Sans',
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   SizedBox(
@@ -557,7 +561,7 @@ class HomeView extends GetView<HomeController> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Get.toNamed(Routes.RIWAYAT);
+                          Get.toNamed(Routes.REPORT);
                         },
                         child: Column(
                           children: [
@@ -593,23 +597,21 @@ class HomeView extends GetView<HomeController> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Container(
-                              width: 64,
-                              height: 64,
-                              decoration: ShapeDecoration(
-                                color : Color(0xFFF6643C),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50),
-                                  ),
-                              ),
-                              child: 
-                              Container(
-                                width: 20,
-                                height: 20,
-                                child: Image.asset("asset/img/chat.png",
-                                
-                                )
-                              ),
-                            ),
+                  width: 64,
+                  height: 64,
+                  decoration: ShapeDecoration(
+                    color: Color(0xFFF6643C),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                  ),
+                  child: Container(
+                      width: 20,
+                      height: 20,
+                      child: Image.asset(
+                        "asset/img/chat.png",
+                      )),
+                ),
                 SizedBox(
                   height: 15,
                 ),
@@ -617,12 +619,12 @@ class HomeView extends GetView<HomeController> {
                   'SiPandhu',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                  color: Color(0xFF666666),
-                  fontSize: 12,
-                  fontFamily: 'Plus Jakarta Sans',
-                  fontWeight: FontWeight.w400,
+                    color: Color(0xFF666666),
+                    fontSize: 12,
+                    fontFamily: 'Plus Jakarta Sans',
+                    fontWeight: FontWeight.w400,
                   ),
-                  ),
+                ),
                 SizedBox(
                   height: 20,
                 )
