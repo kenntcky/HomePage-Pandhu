@@ -5,12 +5,6 @@ import 'package:workmanager/workmanager.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:http/http.dart' as http;
-import 'database.dart';
-import 'reader.dart';
-import 'package:sqflite/sqflite.dart';
 
 // WorkManager callback dispatcher
 @pragma('vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
