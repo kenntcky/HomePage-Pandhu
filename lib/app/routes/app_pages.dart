@@ -43,7 +43,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.PERMISSION,
-      page: () => const PermissionView(),
+      page: () => PermissionView(),
       binding: PermissionBinding(),
     ),
     GetPage(

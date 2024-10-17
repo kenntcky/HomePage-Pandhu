@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-
 import '../controllers/permission_controller.dart';
 
 class PermissionView extends GetView<PermissionController> {
-  const PermissionView({super.key});
+  PermissionView({super.key});
+  final controller = Get.put(PermissionController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,26 +112,33 @@ class PermissionView extends GetView<PermissionController> {
                 ),
                 Column(
                   children: [
-                    Container(
-                      width: 382,
-                      height: 52,
-                      padding:
-                          EdgeInsets.symmetric(vertical: 16, horizontal: 32),
-                      decoration: ShapeDecoration(
-                          color: Color(0xFFF6643C),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          )),
-                      child: Text(
-                        'Setuju',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontFamily: 'Plus Jakarta Sans',
-                          fontWeight: FontWeight.w600,
-                          height: 0,
+                    GestureDetector(
+                      onTap: () async {
+                        Position lokasiUser = await controller.determinePosition();
+
+                        print(lokasiUser);
+                      },
+                      child: Container(
+                        width: 382,
+                        height: 52,
+                        padding:
+                            EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                        decoration: ShapeDecoration(
+                            color: Color(0xFFF6643C),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            )),
+                        child: Text(
+                          'Setuju',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontFamily: 'Plus Jakarta Sans',
+                            fontWeight: FontWeight.w600,
+                            height: 0,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        textAlign: TextAlign.center,
                       ),
                     ),
                     SizedBox(
