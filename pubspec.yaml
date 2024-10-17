@@ -1,8 +1,8 @@
-name: aplikasi_pandhu
-description: "A new Flutter project."
+  name: aplikasi_pandhu
+  description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+  publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -16,10 +16,10 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+1
+  version: 1.0.0+1
 
-environment:
-  sdk: ^3.5.3
+  environment:
+    sdk: ^3.5.3
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -27,9 +27,17 @@ environment:
 # dependencies can be manually updated by changing the version numbers below to
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
-dependencies:
-  flutter:
-    sdk: flutter
+  dependencies:
+    flutter:
+      sdk: flutter
+    firebase_core: ^3.6.0
+    firebase_database: ^11.1.4
+    sqflite: ^2.4.0
+    geolocator: ^13.0.1
+    geocoding: ^3.0.0
+    http: ^1.2.2
+    get: ^4.6.6
+    workmanager: ^0.5.2
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -44,9 +52,9 @@ dependencies:
   http: ^1.2.2
   sqflite: ^2.4.0
 
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
+  dev_dependencies:
+    flutter_test:
+      sdk: flutter
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -59,16 +67,16 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
-flutter:
+  flutter:
 
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
-  uses-material-design: true
+    # The following line ensures that the Material Icons font is
+    # included with your application, so that you can use the icons in
+    # the material Icons class.
+    uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
-  assets: 
-    - asset/img/
+    # To add assets to your application, add an assets section, like this:
+    assets: 
+      - ./asset/img/
     # - asset/fonts/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

@@ -13,12 +13,15 @@ class DatabaseHelper {
   Future<Database> get database async {
     if (_database != null) return _database!;
 
+    print("Hello");
+
     _database = await _initDatabase();
     return _database!;
   }
 
   Future<Database> _initDatabase() async {
     String path = join(await getDatabasesPath(), 'gempa.db');
+
     return await openDatabase(
       path,
       version: 1,
@@ -48,6 +51,8 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> getLatestGempa() async {
     final db = await database;
 
+    print("Hello");
+
     // Query to get the latest entry from the gempa table, ordered by id in descending order
     return await db.query(
       'gempa',
@@ -58,7 +63,8 @@ class DatabaseHelper {
 
   Future<void> insertGempa(Map<String, dynamic> gempaData) async {
     final db = await database;
-    await db.insert('gempa', gempaData, conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert('gempa', gempaData,
+        conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   Future<List<Map<String, dynamic>>> getAllGempa() async {
@@ -71,5 +77,3 @@ class DatabaseHelper {
     await db.delete('gempa');
   }
 }
-
-
