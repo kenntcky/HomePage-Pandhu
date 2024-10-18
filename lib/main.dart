@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'app/routes/app_pages.dart';
@@ -12,6 +11,7 @@ import 'package:path/path.dart';
 import 'database.dart';
 import 'dart:typed_data';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 // WorkManager callback dispatcher
 @pragma(
@@ -158,12 +158,22 @@ void main() async {
 
   print(await DatabaseHelper().getAllGempa());
 
+  Future<String> isLocationInitialized() async {
+    final prefs = await SharedPreferences.getInstance();
+    bool isLocationInitialized = prefs.getBool('locationInitialized') ?? false;
+    if (isLocationInitialized) {
+      return Routes.HOME;
+    } else {
+      return Routes.PERMISSION;
+    }
+  }
+  
   runApp(
     GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Application",
-      initialRoute: AppPages.INITIAL,
-      getPages: AppPages.routes,
+      initialRoute: await isLocationInitialized(),
+      getPages: AppPages.routes
     ),
   );
 }

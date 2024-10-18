@@ -561,7 +561,7 @@ class HomeView extends GetView<HomeController> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Get.toNamed(Routes.REPORT);
+                          Get.toNamed(Routes.RIWAYAT);
                         },
                         child: Column(
                           children: [
