@@ -1,7 +1,9 @@
 import 'package:get/get.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:aplikasi_pandhu/app/routes/app_pages.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class PermissionController extends GetxController {
   late bool serviceEnabled;
@@ -40,7 +42,7 @@ class PermissionController extends GetxController {
 
   if (permission == LocationPermission.deniedForever) {
     // Permissions are denied forever, handle appropriately.
-  Get.toNamed(Routes.HOME);
+    Get.toNamed(Routes.HOME);
     return Future.error(
         'Location permissions are permanently denied, we cannot request permissions.');
   }
@@ -49,6 +51,101 @@ class PermissionController extends GetxController {
   // continue accessing the position of the device.
   await prefs.setBool('locationInitialized', true);
   Get.toNamed(Routes.HOME);
-  return await Geolocator.getCurrentPosition();
+  Position userLoc = await Geolocator.getCurrentPosition();
+
+  // Add user's coordinates to preferences.
+  prefs.setDouble('userLatitude', userLoc.latitude);
+  prefs.setDouble('userLongitude', userLoc.longitude);
+  getAndSetHumanReadable();
+  return userLoc;
 }
+
+  Future<void> getAndSetHumanReadable() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      double userLatitude = prefs.getDouble('userLatitude') ?? 0.0;
+      double userLongitude = prefs.getDouble('userLongitude') ?? 0.0;
+
+      // Check if the latitude and longitude are valid (not 0.0)
+      if (userLatitude == 0.0 || userLongitude == 0.0) {
+        print("Invalid coordinates.");
+      }
+
+      List<Placemark> placemarks = await placemarkFromCoordinates(userLatitude, userLongitude);
+
+      // Log the placemarks data to inspect it
+      // print("Placemarks: $placemarks");
+
+      savePlacemarksToPrefs(placemarks); // Adjust index based on placemark data
+    } catch (e) {
+      // Log the error message
+      print("Error in getHumanReadable(): $e");
+    }
+  }
+
+  // Convert placemarks to a list of Maps for saving in SharedPreferences
+  List<Map<String, dynamic>> placemarksToMapList(List<Placemark> placemarks) {
+    return placemarks.map((placemark) {
+      return {
+        'country': placemark.country,
+        'street': placemark.street,
+        'administrativeArea': placemark.administrativeArea,
+        'subAdministrativeArea': placemark.subAdministrativeArea,
+        'locality': placemark.locality,
+        'postalCode': placemark.postalCode,
+        'thoroughfare': placemark.thoroughfare,
+      };
+    }).toList();
+  }
+
+  // Convert a list of Maps back into a list of Placemark objects
+  List<Placemark> mapListToPlacemarks(List<dynamic> maps) {
+    return maps.map((map) {
+      return Placemark(
+        name: map['name'],
+        locality: map['locality'],
+        administrativeArea: map['administrativeArea'],
+        country: map['country'],
+        postalCode: map['postalCode'],
+        subAdministrativeArea: map['subAdministrativeArea'],
+        street: map['street'],
+        thoroughfare: map['thoroughfare'],
+      );
+    }).toList();
+  }
+
+
+  // Save placemarks to SharedPreferences
+  Future<void> savePlacemarksToPrefs(List<Placemark> placemarks) async {
+    final prefs = await SharedPreferences.getInstance();
+    List<Map<String, dynamic>> placemarkMaps = placemarksToMapList(placemarks);
+
+    // Convert the list of maps to a JSON string
+    String placemarksJson = jsonEncode(placemarkMaps);
+    
+    await prefs.setString('placemarks', placemarksJson);
+    print("Placemarks saved!");
+  }
+
+  // Retrieve placemarks from SharedPreferences
+  Future<List<Placemark>> getPlacemarksFromPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+    Duration delay = const Duration(milliseconds: 1500);
+
+    for (int i = 0; i <= 10; i++) {
+      String? placemarksJson = prefs.getString('placemarks');
+      
+      if (placemarksJson != null) {
+        List<dynamic> placemarkMaps = jsonDecode(placemarksJson);
+        return mapListToPlacemarks(placemarkMaps);
+      }
+      
+      // Wait for a bit before retrying
+      await Future.delayed(delay);
+    }
+
+    print("Failed to retrieve placemarks after 5 retries.");
+    return [];
+  }
+
 }

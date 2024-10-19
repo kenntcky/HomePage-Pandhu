@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import '../controllers/permission_controller.dart';
 
@@ -113,10 +112,9 @@ class PermissionView extends GetView<PermissionController> {
                 Column(
                   children: [
                     GestureDetector(
-                      onTap: () async {
-                        Position lokasiUser = await controller.determinePosition();
-
-                        print(lokasiUser);
+                      onTap: () {
+                        controller.determinePosition();
+                        controller.getAndSetHumanReadable();
                       },
                       child: Container(
                         width: 382,

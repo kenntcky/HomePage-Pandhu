@@ -2,11 +2,15 @@ import 'package:aplikasi_pandhu/app/modules/home/local_widgets/artikel.dart';
 import 'package:aplikasi_pandhu/app/global_widgets/kotakgempa.dart';
 import 'package:aplikasi_pandhu/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import '../controllers/home_controller.dart';
+import '../../permission/controllers/permission_controller.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
+
+  // HomeController().getHumanReadable();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +21,7 @@ class HomeView extends GetView<HomeController> {
             children: [
               AppBar(
                 backgroundColor: Colors.transparent,
-                title: const Column(
+                title: Column(
                   children: [
                     Row(
                       children: [
@@ -43,14 +47,54 @@ class HomeView extends GetView<HomeController> {
                             SizedBox(
                               height: 4,
                             ),
-                            Text(
-                              'Semarang, Jawa Tengah',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
-                                fontFamily: 'Plus Jakarta Sans',
-                                fontWeight: FontWeight.bold,
-                              ),
+                            SizedBox(height: 4),
+                            // Use FutureBuilder to fetch and display the location asynchronously
+                            FutureBuilder<List<Placemark>>(
+                              future: PermissionController().getPlacemarksFromPrefs(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return Text(
+                                    'Memuat lokasi...',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                      fontFamily: 'Plus Jakarta Sans',
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  );
+                                } else if (snapshot.hasError) {
+                                  return Text(
+                                    'Gagal memuat lokasi.',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                      fontFamily: 'Plus Jakarta Sans',
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  );
+                                } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                                  final placemark = snapshot.data![0];
+                                  return Text(
+                                    '${placemark.subAdministrativeArea}, ${placemark.administrativeArea}',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                      fontFamily: 'Plus Jakarta Sans',
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  );
+                                } else {
+                                  return Text(
+                                    'Lokasi tidak ditemukan.',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                      fontFamily: 'Plus Jakarta Sans',
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  );
+                                }
+                              },
                             ),
                           ],
                         ),

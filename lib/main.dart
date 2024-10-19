@@ -12,6 +12,7 @@ import 'database.dart';
 import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'app/modules/home/controllers/home_controller.dart';
 
 // WorkManager callback dispatcher
 @pragma(
@@ -156,8 +157,6 @@ void main() async {
       );
   Workmanager().registerOneOffTask("task-identifier", "simpleTask");
 
-  print(await DatabaseHelper().getAllGempa());
-
   Future<String> isLocationInitialized() async {
     final prefs = await SharedPreferences.getInstance();
     bool isLocationInitialized = prefs.getBool('locationInitialized') ?? false;
@@ -167,6 +166,8 @@ void main() async {
       return Routes.PERMISSION;
     }
   }
+
+  HomeController().getHumanReadable();
   
   runApp(
     GetMaterialApp(
