@@ -13,6 +13,27 @@ import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'app/modules/home/controllers/home_controller.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
+// Initialize notifications
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+void initializeNotifications() {
+  final initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher'); // App icon
+
+  final initializationSettings =
+      InitializationSettings(android: initializationSettingsAndroid);
+
+  flutterLocalNotificationsPlugin.initialize(initializationSettings);
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print("Handling a background message: ${message.messageId}");
+}
+
 
 // WorkManager callback dispatcher
 @pragma(
@@ -74,10 +95,43 @@ void readData() async {
         dirasakan: latestEarthquake["Dirasakan"],
         shakemap: await downloadImageAsBytes(latestEarthquake["shakemapUrl"])
       );
+
+      showNotification(latestEarthquake);
     }
   });
 }
 
+void showNotification(Map<String, dynamic> latestEarthquake) async {
+  final BigTextStyleInformation bigTextStyleInformation = BigTextStyleInformation(
+    'Lokasi: ${latestEarthquake["Wilayah"]}\n'
+    'Magnitudo: ${latestEarthquake["Magnitude"]}\n'
+    'Kedalaman: ${latestEarthquake["Kedalaman"]}\n'
+    'Potentsi: ${latestEarthquake["Potensi"]}\n'
+    'Dirasakan: ${latestEarthquake["Dirasakan"]}',
+    contentTitle: 'Terdeteksi Gempa Baru',
+    summaryText: 'Info Gempa Baru',
+  );
+
+  final AndroidNotificationDetails androidPlatformChannelSpecifics =
+      AndroidNotificationDetails(
+          'gempa_baru_channel', 'Noifikasi Gempa',
+          channelDescription: 'Channel ini digunakan untuk notifikasi gempa baru.',
+          styleInformation: bigTextStyleInformation,
+          importance: Importance.max,
+          priority: Priority.high,
+          ticker: 'ticker',);
+
+  final NotificationDetails platformChannelSpecifics =
+      NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    await flutterLocalNotificationsPlugin.show(
+    0, // Unique notification ID
+    'Gempa ber-magnitudo ${latestEarthquake["Magnitude"]}',
+    '${latestEarthquake["Wilayah"]}',
+    platformChannelSpecifics,
+    payload: 'Detail Gempa',
+  );
+}
 // Function to open and create SQLite database
 Future<Database> _openDatabase() async {
   String databasesPath = await getDatabasesPath();
@@ -144,6 +198,22 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Initialize Flutter Local Notifications plugin
+  initializeNotifications();
+
+  // Initialize Firebase Messaging
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    // Request notification permissions
+  await messaging.requestPermission(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+  
+  // Subscribe to the 'earthquake-updates' topic
+  await messaging.subscribeToTopic('earthquake-updates');
 
   // Cancel any existing tasks before registering a new one
   await Workmanager().cancelAll();
