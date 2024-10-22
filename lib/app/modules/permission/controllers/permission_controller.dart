@@ -54,8 +54,8 @@ class PermissionController extends GetxController {
   Position userLoc = await Geolocator.getCurrentPosition();
 
   // Add user's coordinates to preferences.
-  prefs.setDouble('userLatitude', userLoc.latitude);
-  prefs.setDouble('userLongitude', userLoc.longitude);
+  prefs.setDouble('userLat', userLoc.latitude);
+  prefs.setDouble('userLon', userLoc.longitude);
   getAndSetHumanReadable();
   return userLoc;
 }
@@ -63,8 +63,8 @@ class PermissionController extends GetxController {
   Future<void> getAndSetHumanReadable() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      double userLatitude = prefs.getDouble('userLatitude') ?? 0.0;
-      double userLongitude = prefs.getDouble('userLongitude') ?? 0.0;
+      double userLatitude = prefs.getDouble('userLat') ?? 0.0;
+      double userLongitude = prefs.getDouble('userLon') ?? 0.0;
 
       // Check if the latitude and longitude are valid (not 0.0)
       if (userLatitude == 0.0 || userLongitude == 0.0) {

@@ -45,6 +45,26 @@
               potensi TEXT,
               dirasakan TEXT,
               shakemap BLOB,
+              jarak REAL,
+              tsunamiPotensial INTEGER,
+              kabupaten TEXT
+            )
+          ''');
+          await db.execute('''
+            CREATE TABLE dataGempaTerdekat(
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              tanggal TEXT,
+              jam TEXT,
+              coordinates TEXT,
+              lintang TEXT,
+              bujur TEXT,
+              magnitude TEXT,
+              kedalaman TEXT,
+              wilayah TEXT,
+              potensi TEXT,
+              dirasakan TEXT,
+              shakemap BLOB,
+              jarak REAL,
               tsunamiPotensial INTEGER,
               kabupaten TEXT
             )
@@ -76,8 +96,51 @@
     }
 
     Future<List<Map<String, dynamic>>> getAllGempa() async {
+      final prefs = await SharedPreferences.getInstance();
+      bool dbIsset = prefs.getBool('dbSet') ?? false;
+
+      const maxRetries = 20;
+      int retries = 0;
+      while (!dbIsset) {
+        if (dbIsset) {
+          break;
+        }
+
+        if (retries >= maxRetries) {
+          return [];
+        }
+
+        // Wait for 1500 milliseconds before checking again
+        await Future.delayed(Duration(milliseconds: 1500));
+        retries++;
+      }
+
       final db = await database;
       return await db.query('dataGempa');
+    }
+
+      Future<List<Map<String, dynamic>>> getAllGempaNearest() async {
+      final prefs = await SharedPreferences.getInstance();
+      bool dbIsset = prefs.getBool('dbSet') ?? false;
+
+      const maxRetries = 20;
+      int retries = 0;
+      while (!dbIsset) {
+        if (dbIsset) {
+          break;
+        }
+
+        if (retries >= maxRetries) {
+          return [];
+        }
+
+        // Wait for 1500 milliseconds before checking again
+        await Future.delayed(Duration(milliseconds: 1500));
+        retries++;
+      }
+
+      final db = await database;
+      return await db.query('dataGempaTerdekat');
     }
 
     Future<void> deleteAll() async {

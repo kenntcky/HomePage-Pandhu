@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controllers/riwayat_controller.dart';
+import '../../../../database.dart';
 
 class RiwayatView extends GetView<RiwayatController> {
   const RiwayatView({super.key});
@@ -36,18 +37,35 @@ class RiwayatView extends GetView<RiwayatController> {
                   ),
                 ),
                 Expanded(
-                  child: GridView.builder(
-                    shrinkWrap: true,
-                    physics:  BouncingScrollPhysics(),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 12,
-                    ),
-                    itemCount: 5,
-                  itemBuilder: (_, index) {
-                    return Kotakgempa();
-                    }
-                  ),
+                  child: FutureBuilder<List<Map<String, dynamic>>>(
+                          future: DatabaseHelper().getAllGempa(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return const Center(child: CircularProgressIndicator()); // Show loading spinner
+                            } else if (snapshot.hasError) {
+                              return const Center(child: Text('Gagal ')); // Handle error
+                            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                              return const Center(child: Text('Tidak ada data')); // Handle empty data
+                            } else {
+                              List<Map<String, dynamic>> gempaData = snapshot.data!;
+
+                              return ListView(
+                                scrollDirection: Axis.horizontal,
+                                children: gempaData.take(10).map((gempa) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(right: 10.0),
+                                    child: Kotakgempa(
+                                      magnitude: gempa['magnitude'] ?? '-',
+                                      lokasi: gempa['wilayah'] ?? '-',
+                                      jarak: "${gempa['jarak']}",
+                                      jam: gempa['jam'] ?? '-'
+                                    ),
+                                  );
+                                }).toList(),
+                              );
+                            }
+                          },
+                        ),
                 ),
               ],
             ),

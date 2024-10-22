@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controllers/search_controller.dart';
+import '../../../../database.dart';
 
 class SearchView extends GetView<SearchPageController> {
   const SearchView({super.key});
@@ -104,19 +105,35 @@ class SearchView extends GetView<SearchPageController> {
                       SizedBox(
                         height: 16,
                       ),
-                      GridView.builder(
-                        shrinkWrap: true,
-                        physics:  BouncingScrollPhysics(),
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 7,
-                          childAspectRatio: (.4 / .5)
+                      FutureBuilder<List<Map<String, dynamic>>>(
+                          future: DatabaseHelper().getAllGempa(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return const Center(child: CircularProgressIndicator()); // Show loading spinner
+                            } else if (snapshot.hasError) {
+                              return const Center(child: Text('Gagal ')); // Handle error
+                            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                              return const Center(child: Text('Tidak ada data')); // Handle empty data
+                            } else {
+                              List<Map<String, dynamic>> gempaData = snapshot.data!;
+
+                              return ListView(
+                                scrollDirection: Axis.horizontal,
+                                children: gempaData.take(10).map((gempa) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(right: 10.0),
+                                    child: Kotakgempa(
+                                      magnitude: gempa['magnitude'] ?? '-',
+                                      lokasi: gempa['wilayah'] ?? '-',
+                                      jarak: "${gempa['jarak']} km",
+                                      jam: gempa['jam'] ?? '-'
+                                    ),
+                                  );
+                                }).toList(),
+                              );
+                            }
+                          },
                         ),
-                        itemCount: 1,
-                        itemBuilder: (_, index) {
-                        return Kotakgempa();
-                        }
-                      ),
                     ],
                   ),
                 ),

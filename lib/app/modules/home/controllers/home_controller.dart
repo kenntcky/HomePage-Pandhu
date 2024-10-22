@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 class HomeController extends GetxController {
   //TODO: Implement HomeController
 
-
   Future<String> getHumanReadable() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -29,5 +28,7 @@ class HomeController extends GetxController {
       return "Gagal mengambil lokasi.";
     }
   }
+
+   
 
 }

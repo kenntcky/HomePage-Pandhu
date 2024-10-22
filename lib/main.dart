@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'app/routes/app_pages.dart';
@@ -15,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'app/modules/home/controllers/home_controller.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'dart:math' show cos, sqrt, asin;
 
 // Initialize notifications
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -63,42 +63,131 @@ Future<Uint8List> downloadImageAsBytes(String imageUrl) async {
   return response.bodyBytes; // This gives you the image data in bytes
 }
 
+Future<double> calculateDistance(double gempaLat, double gempaLon) async {
+  final prefs = await SharedPreferences.getInstance();
+  
+  double? userLat;
+  double? userLon;
+  
+  // Keep checking every 1500 milliseconds until values are found (with a max limit)
+  int maxAttempts = 10; // For example, it will retry 10 times (5 seconds total)
+  int attempts = 0;
+
+  while (userLat == null || userLon == null) {
+    userLat = prefs.getDouble('userLat');
+    userLon = prefs.getDouble('userLon');
+
+    if (userLat != null && userLon != null) {
+      break;
+    }
+
+    if (attempts >= maxAttempts) {
+      return 0.0;
+    }
+
+    // Wait for 500 milliseconds before checking again
+    await Future.delayed(Duration(milliseconds: 1500));
+    attempts++;
+  }
+
+  // Haversine formula to calculate the distance between two points
+  var p = 0.017453292519943295;
+  var c = cos;
+  var a = 0.5 - c((gempaLat - userLat) * p) / 2 +
+      c(userLat * p) * c(gempaLat * p) *
+      (1 - c((gempaLon - userLon) * p)) / 2;
+  double distance = 12742 * asin(sqrt(a));
+
+  // Round the distance to one decimal place
+  return double.parse((distance).toStringAsFixed(1));
+}
 
 void readData() async {
   DatabaseReference ref = FirebaseDatabase.instance.ref();
 
-  ref.orderByKey().limitToLast(1).onValue.listen((DatabaseEvent event) async {
+  ref.orderByKey().limitToLast(10).onValue.listen((DatabaseEvent event) async {
     final data = event.snapshot.value;
     if (data != null) {
       Map<String, dynamic> dataMap = Map<String, dynamic>.from(data as Map);
+      final prefs = await SharedPreferences.getInstance();
 
-      String latestKey = dataMap.keys.first;
-      Map<String, dynamic> latestEarthquake =
-          Map<String, dynamic>.from(dataMap[latestKey]['Infogempa']['gempa']);
+      for (String key in dataMap.keys) {
+        Map<String, dynamic> earthquakeData = Map<String, dynamic>.from(dataMap[key]['Infogempa']['gempa']);
+        
+        // Check if this data already exists in SQLite based on unique identifier
+        bool exists = await _checkIfDataExists(
+          tanggal: earthquakeData["Tanggal"], 
+          jam: earthquakeData["Jam"]
+        );
 
-      print("DATA GEMPA TERBARU:");
-      print(latestEarthquake["shakemapUrl"]);
+        // If it doesn't exist, insert it into SQLite
+        if (!exists) {
+          String coordinatesBMKG = earthquakeData['Coordinates'];
 
-      inspect(downloadImageAsBytes(latestEarthquake["shakemapUrl"]));
+          // Convert string coordinates dari BMKG API ke array
+          List<String> parts = coordinatesBMKG.split(',');
+          var gempaCoordinatesx = List<double>.filled(2, 0);
 
-      // Save data locally to SQLite
-      _saveToLocalDatabase(
-        tanggal: latestEarthquake["Tanggal"],
-        jam: latestEarthquake["Jam"],
-        coordinates: latestEarthquake["Coordinates"],
-        lintang: latestEarthquake["Lintang"],
-        bujur: latestEarthquake["Bujur"],
-        magnitude: latestEarthquake["Magnitude"],
-        kedalaman: latestEarthquake["Kedalaman"],
-        wilayah: latestEarthquake["Wilayah"],
-        potensi: latestEarthquake["Potensi"],
-        dirasakan: latestEarthquake["Dirasakan"],
-        shakemap: await downloadImageAsBytes(latestEarthquake["shakemapUrl"])
-      );
+          if (parts.length == 2) {
+            gempaCoordinatesx[0] = double.parse(parts[0].trim());
+            gempaCoordinatesx[1] = double.parse(parts[1].trim());
+          }
 
-      showNotification(latestEarthquake);
+          double jarak = await calculateDistance(gempaCoordinatesx[0], gempaCoordinatesx[1]);
+          
+          if (jarak < 1000) {
+            await _saveToLocalDatabaseNearest(
+            tanggal: earthquakeData["Tanggal"],
+            jam: earthquakeData["Jam"],
+            coordinates: earthquakeData["Coordinates"],
+            lintang: earthquakeData["Lintang"],
+            bujur: earthquakeData["Bujur"],
+            magnitude: earthquakeData["Magnitude"],
+            kedalaman: earthquakeData["Kedalaman"],
+            wilayah: earthquakeData["Wilayah"],
+            potensi: earthquakeData["Potensi"],
+            dirasakan: earthquakeData["Dirasakan"],
+            shakemap: await downloadImageAsBytes(earthquakeData["shakemapUrl"]),
+            jarak: jarak
+            );
+          } else {
+            await _saveToLocalDatabase(
+            tanggal: earthquakeData["Tanggal"],
+            jam: earthquakeData["Jam"],
+            coordinates: earthquakeData["Coordinates"],
+            lintang: earthquakeData["Lintang"],
+            bujur: earthquakeData["Bujur"],
+            magnitude: earthquakeData["Magnitude"],
+            kedalaman: earthquakeData["Kedalaman"],
+            wilayah: earthquakeData["Wilayah"],
+            potensi: earthquakeData["Potensi"],
+            dirasakan: earthquakeData["Dirasakan"],
+            shakemap: await downloadImageAsBytes(earthquakeData["shakemapUrl"]),
+            jarak: jarak
+          );
+          }
+        }
+      }
+
+      prefs.setBool('dbSet', true);
+      showNotification(Map<String, dynamic>.from(dataMap[dataMap.keys.last]['Infogempa']['gempa']));
     }
   });
+}
+
+// Function to check if a record already exists in SQLite
+Future<bool> _checkIfDataExists({required String tanggal, required String jam}) async {
+  Database db = await _openDatabase();
+
+  // Query SQLite to see if this data already exists based on 'tanggal' and 'jam'
+  List<Map<String, dynamic>> result = await db.query(
+    'dataGempa',
+    where: 'tanggal = ? AND jam = ?',
+    whereArgs: [tanggal, jam],
+  );
+
+  // If the result is not empty, it means the data exists
+  return result.isNotEmpty;
 }
 
 void showNotification(Map<String, dynamic> latestEarthquake) async {
@@ -157,7 +246,8 @@ Future<void> _saveToLocalDatabase(
     required String wilayah, 
     required String potensi, 
     required String dirasakan, 
-    required Uint8List shakemap}) async {
+    required Uint8List shakemap,
+    required double jarak}) async {
   Database db = await _openDatabase();
 
   // Check the number of existing entries
@@ -185,7 +275,56 @@ Future<void> _saveToLocalDatabase(
     'wilayah': wilayah,
     'potensi': potensi,
     'dirasakan': dirasakan,
-    'shakemap': shakemap
+    'shakemap': shakemap,
+    'jarak': jarak
+  });
+
+  print("Data saved to SQLite");
+}
+
+// Function to save data into SQLite database
+Future<void> _saveToLocalDatabaseNearest(
+    {required String tanggal, 
+    required String jam, 
+    required String coordinates, 
+    required String lintang, 
+    required String bujur, 
+    required String magnitude, 
+    required String kedalaman, 
+    required String wilayah, 
+    required String potensi, 
+    required String dirasakan, 
+    required Uint8List shakemap,
+    required double jarak}) async {
+  Database db = await _openDatabase();
+
+  // Check the number of existing entries
+  List<Map<String, dynamic>> existingData = await db.query('dataGempa');
+
+  // If there are 10 or more entries, delete the oldest
+  if (existingData.length >= 10) {
+    // Remove the oldest entry
+    await db.delete(
+      'dataGempaTerdekat',
+      where: 'id = ?',
+      whereArgs: [existingData.first['id']],
+    );
+  }
+
+  // Insert new data into SQLite
+  await db.insert('dataGempaTerdekat', {
+    'tanggal': tanggal,
+    'jam': jam,
+    'coordinates': coordinates,
+    'lintang': lintang,
+    'bujur': bujur,
+    'magnitude': magnitude,
+    'kedalaman': kedalaman,
+    'wilayah': wilayah,
+    'potensi': potensi,
+    'dirasakan': dirasakan,
+    'shakemap': shakemap,
+    'jarak': jarak
   });
 
   print("Data saved to SQLite");
