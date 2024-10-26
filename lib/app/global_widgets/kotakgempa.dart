@@ -129,7 +129,7 @@ class Kotakgempa extends StatelessWidget {
                                   width: 5,
                                 ),
                                 Text(
-                                  "${jam.substring(0, 5)} WIB",
+                                  "${jam}",
                                   style: TextStyle(
                                     color: Color(0xFF666666),
                                     fontSize: 12,
