@@ -14,7 +14,7 @@ class OnboardingView extends GetView<OnboardingController> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Image.asset(
-              "asset/img/logopandu.png",
+              "asset/img/logo/logo-pandu.png",
               width: 14.88,
               height: 24,
             ),
@@ -40,7 +40,7 @@ class OnboardingView extends GetView<OnboardingController> {
           Container(
             width: 294,
             height: 196,
-            child: Image(image: AssetImage("asset/img/people.png")),
+            child: Image(image: AssetImage("asset/img/image/people.png")),
           ),
           Text(
             'Siaga Gempa,\nLindungi Masa Bersama',

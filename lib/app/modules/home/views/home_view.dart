@@ -20,13 +20,14 @@ class HomeView extends GetView<HomeController> {
           ListView(
             children: [
               AppBar(
-                backgroundColor: Colors.transparent,
+                automaticallyImplyLeading: false,
+                backgroundColor: Color(0xFFF7F7F7),
                 title: Column(
                   children: [
                     Row(
                       children: [
                         Image(
-                          image: AssetImage("asset/img/location.png"),
+                          image: AssetImage("asset/img/icon/location.png"),
                         ),
                         SizedBox(
                           width: 8,
@@ -133,71 +134,89 @@ class HomeView extends GetView<HomeController> {
                 SizedBox(
                   height: 20,
                 ),
-                Container(
-                  width: 382,
-                  height: 201,
-                  decoration: ShapeDecoration(
-                    color: Color(0xFFF6643C),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Container(
+                    width: 382,
+                    height: 201,
+                    decoration: ShapeDecoration(
+                      color: Color(0xFFF6643C),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      shadows: const [
+                        BoxShadow(
+                          color: Color(0x99F6643C),
+                          blurRadius: 20,
+                          offset: Offset(0, 4),
+                          spreadRadius: 0,
+                        )
+                      ],
                     ),
-                    shadows: const [
-                      BoxShadow(
-                        color: Color(0x99F6643C),
-                        blurRadius: 20,
-                        offset: Offset(0, 4),
-                        spreadRadius: 0,
-                      )
-                    ],
-                  ),
-                  child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 12, vertical: 15),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                              // mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                        child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
                               children: [
                                 Text(
-                                  'Gempa Sedang Terjadi',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontFamily: 'Plus Jakarta Sans',
-                                    fontWeight: FontWeight.w600,
+                                'Gempa Sedang Terjadi',
+                                style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontFamily: 'Plus Jakarta Sans',
+                                fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 SizedBox(
-                                  height: 10,
+                                  height: 16,
                                 ),
-                                Text(
-                                  'Hati-hati gempa sedang terjadi\ndi wilayah Kota Semarang. \nBerpotensi tsunami dari pantai\nMarina.',
-                                  style: TextStyle(
+                                Container(
+                                  width: 210,
+                                  child: Text(
+                                    'Hati-hati gempa sedang terjadi di wilayah Kota Semarang. Berpotensi tsunami dari pantai Marina.',
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
                                       color: Color(0xFFFBC1B1),
                                       fontSize: 14,
                                       fontFamily: 'Plus Jakarta Sans',
                                       fontWeight: FontWeight.w400,
-                                      overflow: TextOverflow.ellipsis),
-                                ),
-                                SizedBox(
-                                  height: 35,
-                                ),
-                                Text(
-                                  'Selengkapnya',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                    fontFamily: 'Plus Jakarta Sans',
-                                    fontWeight: FontWeight.w600,
-                                    height: 0.11,
+                                    ),
                                   ),
                                 ),
-                              ]),
-                          Container(child: Image.asset("asset/img/gempe.png")),
-                        ],
-                      )),
+                              ],
+                            ),
+                            Text(
+                              'Selengkapnya',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontFamily: 'Plus Jakarta Sans',
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Flexible(
+                          child: AspectRatio(
+                            aspectRatio: 1, // This maintains a square aspect ratio for the image
+                            child: Image.asset(
+                              "asset/img/image/gempa.png",
+                              fit: BoxFit.contain, // Preserves image proportions and scales to fit
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                    ),
+                  ),
                 ),
                 SizedBox(
                   height: 20,
@@ -218,14 +237,19 @@ class HomeView extends GetView<HomeController> {
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          Text(
-                            'Lebih Detail',
-                            style: TextStyle(
-                              color: Color(0xFF3BABF6),
-                              fontSize: 14,
-                              fontFamily: 'Plus Jakarta Sans',
-                              fontWeight: FontWeight.w600,
-                              height: 0.11,
+                          GestureDetector(
+                            onTap: () {
+                                Get.toNamed(Routes.RIWAYAT);
+                            },
+                            child: Text(
+                              'Lebih Detail',
+                              style: TextStyle(
+                                color: Color(0xFF3BABF6),
+                                fontSize: 14,
+                                fontFamily: 'Plus Jakarta Sans',
+                                fontWeight: FontWeight.w600,
+                                height: 0.11,
+                              ),
                             ),
                           )
                         ],
@@ -364,95 +388,82 @@ class HomeView extends GetView<HomeController> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Expanded(
-                    child: Container(
-                      // width: 382,
-                      height: 201,
-                      decoration: ShapeDecoration(
-                          color: Color(0xFF4EB8FF),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          shadows: [
-                            BoxShadow(
-                              color: Color(0x994FB8FF),
-                              blurRadius: 20,
-                              offset: Offset(0, 4),
-                              spreadRadius: 0,
-                            )
-                          ]),
-                      child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                        child: Stack(
-                          children: [
-                            Row(
-                              children: [
-                                Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Informasi Bantuan Gempa',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                          fontFamily: 'Plus Jakarta Sans',
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Container(
-                                        width: 210,
-                                        height: 62,
-                                        child: Text(
-                                          'Hubungi BMKG atau BPBD kota Anda untuk mendapatkan bantuan dan informasi yang lebih terperinci',
-                                          style: TextStyle(
-                                            color: Color(0xFFB9E3FF),
-                                            fontSize: 14,
-                                            fontFamily: 'Plus Jakarta Sans',
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                          maxLines: 3,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 35,
-                                      ),
-                                      Text(
-                                        'Hubungi',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 14,
-                                          fontFamily: 'Plus Jakarta Sans',
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ]),
-                              ],
-                            ),
-                            Positioned(
-                              left: 220,
-                              top: 15,
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 142,
-                                    height: 142,
-                                    child: Image.asset(
-                                      "asset/img/bell.png",
-                                      fit: BoxFit.fill,
-                                    ),
+                  child: Container(
+                    height: 201,
+                    decoration: ShapeDecoration(
+                      color: Color(0xFF4EB8FF),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      shadows: [
+                        BoxShadow(
+                          color: Color(0x994FB8FF),
+                          blurRadius: 20,
+                          offset: Offset(0, 4),
+                          spreadRadius: 0,
+                        )
+                      ],
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween, // Separates text from image
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Informasi Bantuan Gempa',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontFamily: 'Plus Jakarta Sans',
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Container(
+                                width: 210,
+                                child: Text(
+                                  'Hubungi BMKG atau BPBD kota Anda untuk mendapatkan bantuan dan informasi yang lebih terperinci',
+                                  style: TextStyle(
+                                    color: Color(0xFFB9E3FF),
+                                    fontSize: 14,
+                                    fontFamily: 'Plus Jakarta Sans',
+                                    fontWeight: FontWeight.w400,
                                   ),
-                                ],
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 8
+                                ),
+                              Text(
+                                'Hubungi',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontFamily: 'Plus Jakarta Sans',
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Flexible(
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: AspectRatio(
+                                aspectRatio: 1,
+                                child: Image.asset(
+                                  "asset/img/image/bell.png",
+                                  fit: BoxFit.contain, // Keeps the image responsive and proportionate
+                                ),
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -540,7 +551,7 @@ class HomeView extends GetView<HomeController> {
                                 )
                               ],
                             ),
-                            Image.asset("asset/img/checklist.png"),
+                            Image.asset("asset/img/image/checklist.png"),
                           ],
                         ),
                       ),
@@ -568,11 +579,11 @@ class HomeView extends GetView<HomeController> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset("asset/img/google-logo.png"),
+                      Image.asset("asset/img/logo/logo-google.png"),
                       SizedBox(
                         width: 20,
                       ),
-                      Image.asset("asset/img/bmkg-logo.png"),
+                      Image.asset("asset/img/logo/logo-bmkg.png"),
                     ],
                   )
                 ],
@@ -600,7 +611,7 @@ class HomeView extends GetView<HomeController> {
                             width: 24,
                             height: 24,
                             child: Image.asset(
-                              "asset/img/home-onclick.png",
+                              "asset/img/icon/home-onclick.png",
                               fit: BoxFit.fill,
                             ),
                           ),
@@ -625,7 +636,7 @@ class HomeView extends GetView<HomeController> {
                               width: 24,
                               height: 24,
                               child: Image.asset(
-                                "asset/img/clock-idle.png",
+                                "asset/img/icon/clock-idle.png",
                                 fit: BoxFit.fill,
                               ),
                             ),
@@ -665,7 +676,7 @@ class HomeView extends GetView<HomeController> {
                       width: 20,
                       height: 20,
                       child: Image.asset(
-                        "asset/img/chat.png",
+                        "asset/img/icon/chat.png",
                       )),
                 ),
                 SizedBox(
