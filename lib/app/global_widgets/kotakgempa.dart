@@ -64,87 +64,82 @@ class Kotakgempa extends StatelessWidget {
     return Stack(
       children: [
         Container(
-          height: 203,
+          height: 217,
           width: 187,
           decoration: BoxDecoration(
-              color: Colors.white, borderRadius: BorderRadius.circular(10)),
-          alignment: Alignment.topCenter,
+              color: Colors.white, 
+              borderRadius: BorderRadius.circular(10)
+              ),
+          // alignment: Alignment.topCenter,
           child: Padding(
             padding: const EdgeInsets.all(6),
             child: Column(
+              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
                   height: 97,
                   width: 175,
                   decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 184, 181, 181),
+                      image: DecorationImage(
+                        image: AssetImage("asset/img/image/display-kotakgempa.png"),
+                        fit: BoxFit.fill
+                      ),
                       borderRadius: BorderRadius.circular(4)),
                 ),
-                Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 6,
-                      ),
-                      child: Text(
-                        lokasi,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontFamily: 'Plus Jakarta Sans',
-                          fontWeight: FontWeight.w600,
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                      lokasi,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontFamily: 'Plus Jakarta Sans',
+                        fontWeight: FontWeight.w600,
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        top: 10,
-                      ),
-                      child: Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                      Row(
+                      textBaseline: TextBaseline.ideographic,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Row(
                           children: [
-                            Row(
-                              children: [
-                                Image.asset(
-                                  "asset/img/location.png",
-                                  width: 16,
-                                  height: 16,
-                                ),
-                                 Text(
-                                  jarak,
-                                  style: TextStyle(
-                                    color: Color(0xFF666666),
-                                    fontSize: 12,
-                                    fontFamily: 'Plus Jakarta Sans',
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ],
+                            Image.asset(
+                              "asset/img/icon/location.png",
+                              width: 16,
+                              height: 16,
                             ),
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text(
-                                  "${jam}",
-                                  style: TextStyle(
-                                    color: Color(0xFF666666),
-                                    fontSize: 12,
-                                    fontFamily: 'Plus Jakarta Sans',
-                                    fontWeight: FontWeight.w400,
-                                    height: 0.12,
-                                  ),
-                                )
-                              ],
-                            )
-                          ],
+                            SizedBox(
+                              width: 2,
+                            ),
+                            Text(
+                            jarak,
+                            style: TextStyle(
+                              color: Color(0xFF666666),
+                              fontSize: 12,
+                              fontFamily: 'Plus Jakarta Sans',
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ],
                         ),
-                      ),
-                    )
-                  ],
+                        Text(
+                          "${jam}",
+                          style: TextStyle(
+                            color: Color(0xFF666666),
+                            fontSize: 12,
+                            fontFamily: 'Plus Jakarta Sans',
+                            fontWeight: FontWeight.w400,
+                          ),
+                        )
+                      ],
+                      )
+                    ],
+                  ),
                 ),
               ],
             ),

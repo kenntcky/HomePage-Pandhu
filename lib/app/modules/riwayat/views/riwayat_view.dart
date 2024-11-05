@@ -49,8 +49,14 @@ class RiwayatView extends GetView<RiwayatController> {
                             } else {
                               List<Map<String, dynamic>> gempaData = snapshot.data!;
 
-                              return ListView(
-                                scrollDirection: Axis.horizontal,
+                              return GridView(
+                                scrollDirection: Axis.vertical,
+                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  mainAxisSpacing: 0,
+                                  crossAxisSpacing: 0,
+                                  childAspectRatio: 4/5,
+                                  ),
                                 children: gempaData.take(10).map((gempa) {
                                   return Padding(
                                     padding: const EdgeInsets.only(right: 10.0),
@@ -66,6 +72,9 @@ class RiwayatView extends GetView<RiwayatController> {
                             }
                           },
                         ),
+                ),
+                SizedBox(
+                  height: 75,
                 ),
               ],
             ),
@@ -86,32 +95,26 @@ class RiwayatView extends GetView<RiwayatController> {
                         onTap: () {
                           Get.toNamed(Routes.HOME);
                         },
-                        child: 
-                        GestureDetector(
-                          onTap: () {
-                            Get.toNamed(Routes.HOME);
-                          },
-                          child: Column(
-                            children: [
-                              Container(
-                                width: 24,
-                                height: 24,
-                                child: Image.asset(
-                                  "asset/img/home-idle.png",
-                                  fit: BoxFit.fill,
-                                ),
+                        child: Column(
+                          children: [
+                            Container(
+                              width: 24,
+                              height: 24,
+                              child: Image.asset(
+                                "asset/img/icon/home-idle.png",
+                                fit: BoxFit.fill,
                               ),
-                              Text(
-                                'Beranda',
-                                style: TextStyle(
-                                  color: Color(0xFFF6643C),
-                                  fontSize: 12,
-                                  fontFamily: 'Plus Jakarta Sans',
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              )
-                            ],
-                          ),
+                            ),
+                            Text(
+                              'Beranda',
+                              style: TextStyle(
+                                color: Color(0xFFF6643C),
+                                fontSize: 12,
+                                fontFamily: 'Plus Jakarta Sans',
+                                fontWeight: FontWeight.w600,
+                              ),
+                            )
+                          ],
                         ),
                       ),
                       GestureDetector(
@@ -124,7 +127,7 @@ class RiwayatView extends GetView<RiwayatController> {
                               width: 24,
                               height: 24,
                               child: Image.asset(
-                                "asset/img/clock-onclick.png",
+                                "asset/img/icon/clock-onclick.png",
                                 fit: BoxFit.fill,
                               ),
                             ),
@@ -164,7 +167,7 @@ class RiwayatView extends GetView<RiwayatController> {
                               Container(
                                 width: 20,
                                 height: 20,
-                                child: Image.asset("asset/img/chat.png",
+                                child: Image.asset("asset/img/icon/chat.png",
                                 
                                 )
                               ),

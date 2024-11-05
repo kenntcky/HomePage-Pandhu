@@ -12,7 +12,7 @@ class PermissionView extends GetView<PermissionController> {
           title: Row(
             children: [
               Image.asset(
-                "asset/img/logopandu.png",
+                "asset/img/logo/logo-pandu.png",
                 width: 14.88,
                 height: 24,
               ),
@@ -83,7 +83,7 @@ class PermissionView extends GetView<PermissionController> {
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 30),
                               child: Image.asset(
-                                "asset/img/3dlocation.png",
+                                "asset/img/image/3dlocation.png",
                               ),
                             ),
                             Text(

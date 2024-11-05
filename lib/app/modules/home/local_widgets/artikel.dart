@@ -19,7 +19,7 @@ class Artikel extends StatelessWidget {
           children: [
             ClipRRect(
                 borderRadius: BorderRadius.circular(4),
-                child: Image.asset("asset/img/artikel.png")),
+                child: Image.asset("asset/img/image/artikel.png")),
             SizedBox(
               height: 8,
             ),
@@ -46,59 +46,62 @@ class Artikel extends StatelessWidget {
                 )
               ],
             ),
-            SizedBox(
-              height: 4,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  'Bagaimana\nCara Evakuasi Diri',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontFamily: 'Plus Jakarta Sans',
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-            Text(
-              'Indonesia adalah salah satu bagian yang termasuk dalam Rings of Fire (ROF). Namun naasnya, banyak sekali warga yang',
-              style: TextStyle(
-                color: Color(0xFF636363),
-                fontSize: 10,
-                fontFamily: 'Plus Jakarta Sans',
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            SizedBox(
-              height: 8,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                  width: 43,
-                  height: 15,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Baca',
-                        style: TextStyle(
-                          color: Color(0xFF3BABF6),
-                          fontSize: 10,
-                          fontFamily: 'Plus Jakarta Sans',
-                          fontWeight: FontWeight.w600,
+                    'Bagaimana\nCara Evakuasi Diri',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontFamily: 'Plus Jakarta Sans',
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    'Indonesia adalah salah satu bagian yang termasuk dalam Rings of Fire (ROF). Namun naasnya, banyak sekali warga yang',
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Color(0xFF636363),
+                      fontSize: 10,
+                      fontFamily: 'Plus Jakarta Sans',
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 43,
+                        height: 15,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Baca',
+                              style: TextStyle(
+                                color: Color(0xFF3BABF6),
+                                fontSize: 10,
+                                fontFamily: 'Plus Jakarta Sans',
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Image.asset("asset/img/icon/arrow-right.png"),
+                          ],
                         ),
                       ),
-                      Image.asset("asset/img/arrow-right.png"),
                     ],
-                  ),
-                ),
-              ],
-            )
+                  )
+                ],
+              ),
+            ),
           ],
         ),
       ),

@@ -18,7 +18,7 @@ class SplashView extends GetView<SplashController> {
             Container(
                 child: const Column(
               children: [
-                Image(image: AssetImage("asset/img/logopandu.png")),
+                Image(image: AssetImage("asset/img/logo/logo-pandu.png")),
                 SizedBox(
                   height: 20,
                 ),
@@ -51,12 +51,12 @@ class SplashView extends GetView<SplashController> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  'asset/img/gmap.png', // ganti dengan lokasi file logo Google Anda
+                  'asset/img/logo/logo-gmap.png', // ganti dengan lokasi file logo Google Anda
                   height: 30,
                 ),
                 SizedBox(width: 10),
                 Image.asset(
-                  'asset/img/bmkg.png', // ganti dengan lokasi file logo BMKG Anda
+                  'asset/img/logo/logo-bmkg.png', // ganti dengan lokasi file logo BMKG Anda
                   height: 30,
                 ),
               ],
