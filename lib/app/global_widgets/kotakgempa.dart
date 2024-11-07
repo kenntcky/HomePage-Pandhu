@@ -164,7 +164,7 @@ class Kotakgempa extends StatelessWidget {
                     color: Color(0xFFF6643C),
                   ),
                   Text(
-                    '$magnitude SR',
+                    '$magnitude M',
                     style: TextStyle(
                       color: Color(0xFFF6643C),
                       fontSize: 12,
