@@ -1,6 +1,5 @@
 import 'package:aplikasi_pandhu/app/global_widgets/bottom_bar.dart';
 import 'package:aplikasi_pandhu/app/global_widgets/kotakgempa.dart';
-import 'package:aplikasi_pandhu/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';

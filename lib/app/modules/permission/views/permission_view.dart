@@ -35,80 +35,109 @@ class PermissionView extends GetView<PermissionController> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              // crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Perizinan',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 24,
-                    fontFamily: 'Plus Jakarta Sans',
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                Text(
-                  'Untuk mendapatkan pengalaman yang lebih baik dalam menggunakan aplikasi, Pandhu menyarankan Anda untuk:',
-                  style: TextStyle(
-                    color: Color(0xFF666666),
-                    fontSize: 14,
-                    fontFamily: 'Plus Jakarta Sans',
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
                 Container(
-                  width: 382,
-                  height: 317,
-                  decoration: ShapeDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment(0.00, -1.00),
-                        end: Alignment(0, 1),
-                        colors: [Color(0xFFECECEC), Colors.white],
+                  height: 106,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Perizinan',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 24,
+                          fontFamily: 'Plus Jakarta Sans',
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          width: 1,
-                          strokeAlign: BorderSide.strokeAlignCenter,
-                          color: Color(0xFFECECEC),
+                      Text(
+                        'Untuk mendapatkan pengalaman yang lebih baik dalam menggunakan aplikasi, Pandhu menyarankan Anda untuk:',
+                        style: TextStyle(
+                          color: Color(0xFF666666),
+                          fontSize: 14,
+                          fontFamily: 'Plus Jakarta Sans',
+                          fontWeight: FontWeight.w400,
                         ),
-                      )),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 40),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 30),
-                              child: Image.asset(
-                                "asset/img/image/3dlocation.png",
-                              ),
-                            ),
-                            Text(
-                              'Izin Lokasi',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                                fontFamily: 'Plus Jakarta Sans',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            )
-                          ],
-                        ),
-                        Image.asset(
-                          "asset/img/folder.png",
-                          width: 133,
-                          height: 159,
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
                 SizedBox(
-                  height: 90,
+                  height: 20,
                 ),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        width: 382,
+                        height: 350,
+                        decoration: ShapeDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment(0.00, -1.00),
+                              end: Alignment(0, 1),
+                              colors: [Color(0xFFECECEC), Colors.white],
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            )),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 30, horizontal: 36),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                height: 170,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Image.asset(
+                                      "asset/img/image/3dlocation.png",
+                                    ),
+                                    Text(
+                                      'Izin Lokasi',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18,
+                                        fontFamily: 'Plus Jakarta Sans',
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                height: 170,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Image.asset(
+                                      "asset/img/image/folder.png",
+                                    ),
+                                    Text(
+                                      'Izin Penyimpanan',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18,
+                                        fontFamily: 'Plus Jakarta Sans',
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                
                 Column(
                   children: [
                     GestureDetector(
@@ -172,6 +201,9 @@ class PermissionView extends GetView<PermissionController> {
                         ),
                         textAlign: TextAlign.center,
                       ),
+                    ),
+                    SizedBox(
+                      height: 25,
                     )
                   ],
                 ),
