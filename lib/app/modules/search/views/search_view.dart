@@ -1,4 +1,3 @@
-import 'package:aplikasi_pandhu/app/global_widgets/appbar.dart';
 import 'package:aplikasi_pandhu/app/global_widgets/kotakgempa.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,7 +13,50 @@ class SearchView extends GetView<SearchPageController> {
       backgroundColor: Color(0xFFF7F7F7),
       body: Column(
         children: [
-          appBar(),
+          AppBar(
+                backgroundColor: Colors.transparent,
+                title: const Column(
+                  children: [
+                    Row(
+                      children: [
+                        Image(
+                          image: AssetImage("asset/img/location.png"),
+                        ),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Lokasi Anda,",
+                              style: TextStyle(
+                                color: Color(0xFF666666),
+                                fontSize: 14,
+                                fontFamily: 'Plus Jakarta Sans',
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 4,
+                            ),
+                            Text(
+                              'Semarang, Jawa Tengah',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                                fontFamily: 'Plus Jakarta Sans',
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
           Padding(
             padding: EdgeInsets.all(20),
             child: Column(

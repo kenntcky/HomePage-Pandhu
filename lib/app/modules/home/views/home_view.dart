@@ -1,4 +1,4 @@
-import 'package:aplikasi_pandhu/app/global_widgets/appbar.dart';
+import 'package:aplikasi_pandhu/app/global_widgets/bottom_bar.dart';
 import 'package:aplikasi_pandhu/app/modules/home/local_widgets/artikel.dart';
 import 'package:aplikasi_pandhu/app/global_widgets/kotakgempa.dart';
 import 'package:aplikasi_pandhu/app/routes/app_pages.dart';
@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/home_controller.dart';
 import '../../../../database.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:aplikasi_pandhu/app/modules/permission/controllers/permission_controller.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
@@ -18,7 +20,91 @@ class HomeView extends GetView<HomeController> {
         children: [
           ListView(
             children: [
-              appBar(),
+              AppBar(
+                automaticallyImplyLeading: false,
+                backgroundColor: Color(0xFFF7F7F7),
+                title: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Image(
+                          image: AssetImage("asset/img/icon/location.png"),
+                        ),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Lokasi Anda,",
+                              style: TextStyle(
+                                color: Color(0xFF666666),
+                                fontSize: 14,
+                                fontFamily: 'Plus Jakarta Sans',
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 4,
+                            ),
+                            SizedBox(height: 4),
+                            // Use FutureBuilder to fetch and display the location asynchronously
+                            FutureBuilder<List<Placemark>>(
+                              future: PermissionController().getPlacemarksFromPrefs(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return Text(
+                                    'Memuat lokasi...',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                      fontFamily: 'Plus Jakarta Sans',
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  );
+                                } else if (snapshot.hasError) {
+                                  return Text(
+                                    'Gagal memuat lokasi.',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                      fontFamily: 'Plus Jakarta Sans',
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  );
+                                } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                                  final placemark = snapshot.data![0];
+                                  return Text(
+                                    '${placemark.subAdministrativeArea}, ${placemark.administrativeArea}',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                      fontFamily: 'Plus Jakarta Sans',
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  );
+                                } else {
+                                  return Text(
+                                    'Lokasi tidak ditemukan.',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                      fontFamily: 'Plus Jakarta Sans',
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
               Column(children: [
                 Padding(
                   padding: EdgeInsets.all(10),
@@ -508,111 +594,7 @@ class HomeView extends GetView<HomeController> {
               )
             ],
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Expanded(
-              child: Container(
-                height: 82,
-                decoration: BoxDecoration(color: Colors.white),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 20, horizontal: 68),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        children: [
-                          Container(
-                            width: 24,
-                            height: 24,
-                            child: Image.asset(
-                              "asset/img/icon/home-onclick.png",
-                              fit: BoxFit.fill,
-                            ),
-                          ),
-                          Text(
-                            'Beranda',
-                            style: TextStyle(
-                              color: Color(0xFFF6643C),
-                              fontSize: 12,
-                              fontFamily: 'Plus Jakarta Sans',
-                              fontWeight: FontWeight.w600,
-                            ),
-                          )
-                        ],
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Get.toNamed(Routes.RIWAYAT);
-                        },
-                        child: Column(
-                          children: [
-                            Container(
-                              width: 24,
-                              height: 24,
-                              child: Image.asset(
-                                "asset/img/icon/clock-idle.png",
-                                fit: BoxFit.fill,
-                              ),
-                            ),
-                            Text(
-                              'Riwayat',
-                              style: TextStyle(
-                                color: Color(0xFF666666),
-                                fontSize: 12,
-                                fontFamily: 'Plus Jakarta Sans',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Container(
-                  width: 64,
-                  height: 64,
-                  decoration: ShapeDecoration(
-                    color: Color(0xFFF6643C),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                  ),
-                  child: Container(
-                      width: 20,
-                      height: 20,
-                      child: Image.asset(
-                        "asset/img/icon/chat.png",
-                      )),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Text(
-                  'SiPandhu',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Color(0xFF666666),
-                    fontSize: 12,
-                    fontFamily: 'Plus Jakarta Sans',
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                )
-              ],
-            ),
-          ),
+          BottomBar()
         ],
       ),
     );

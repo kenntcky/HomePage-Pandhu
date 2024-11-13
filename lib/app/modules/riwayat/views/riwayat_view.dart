@@ -1,5 +1,5 @@
+import 'package:aplikasi_pandhu/app/global_widgets/bottom_bar.dart';
 import 'package:aplikasi_pandhu/app/global_widgets/kotakgempa.dart';
-import 'package:aplikasi_pandhu/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -79,118 +79,7 @@ class RiwayatView extends GetView<RiwayatController> {
               ],
             ),
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Expanded(
-              child: Container(
-                height: 82,
-                decoration: BoxDecoration(color: Colors.white),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 20, horizontal: 68),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Get.toNamed(Routes.HOME);
-                        },
-                        child: Column(
-                          children: [
-                            Container(
-                              width: 24,
-                              height: 24,
-                              child: Image.asset(
-                                "asset/img/icon/home-idle.png",
-                                fit: BoxFit.fill,
-                              ),
-                            ),
-                            Text(
-                              'Beranda',
-                              style: TextStyle(
-                                color: Color(0xFFF6643C),
-                                fontSize: 12,
-                                fontFamily: 'Plus Jakarta Sans',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Get.toNamed(Routes.RIWAYAT);
-                        },
-                        child: Column(
-                          children: [
-                            Container(
-                              width: 24,
-                              height: 24,
-                              child: Image.asset(
-                                "asset/img/icon/clock-onclick.png",
-                                fit: BoxFit.fill,
-                              ),
-                            ),
-                            Text(
-                              'Riwayat',
-                              style: TextStyle(
-                                color: Color(0xFF666666),
-                                fontSize: 12,
-                                fontFamily: 'Plus Jakarta Sans',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Container(
-                              width: 64,
-                              height: 64,
-                              decoration: ShapeDecoration(
-                                color : Color(0xFFF6643C),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50),
-                                  ),
-                              ),
-                              child: 
-                              Container(
-                                width: 20,
-                                height: 20,
-                                child: Image.asset("asset/img/icon/chat.png",
-                                
-                                )
-                              ),
-                            ),
-                SizedBox(
-                  height: 15,
-                ),
-                Text(
-                  'SiPandhu',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                  color: Color(0xFF666666),
-                  fontSize: 12,
-                  fontFamily: 'Plus Jakarta Sans',
-                  fontWeight: FontWeight.w400,
-                  ),
-                  ),
-                SizedBox(
-                  height: 20,
-                )
-              ],
-            ),
-          ),
+          BottomBar()
         ],
       )
     );
