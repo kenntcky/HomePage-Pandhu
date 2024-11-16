@@ -10,6 +10,7 @@ abstract class Routes {
   static const PERMISSION = _Paths.PERMISSION;
   static const SEARCH = _Paths.SEARCH;
   static const REPORT = _Paths.REPORT;
+  static const CHATAI = _Paths.CHATAI;
 }
 
 abstract class _Paths {
@@ -21,4 +22,5 @@ abstract class _Paths {
   static const PERMISSION = '/permission';
   static const SEARCH = '/search';
   static const REPORT = '/report';
+  static const CHATAI = '/chatai';
 }

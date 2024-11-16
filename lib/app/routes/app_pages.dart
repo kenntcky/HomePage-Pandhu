@@ -14,6 +14,7 @@ import '../modules/search/bindings/search_binding.dart';
 import '../modules/search/views/search_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
+import '../modules/chatai/chat_page.dart';
 
 part 'app_routes.dart';
 
@@ -55,6 +56,10 @@ class AppPages {
       name: _Paths.REPORT,
       page: () => const ReportView(),
       binding: ReportBinding(),
+    ),
+    GetPage(
+      name: _Paths.CHATAI,
+      page: () => const ChatPage(),
     ),
   ];
 }

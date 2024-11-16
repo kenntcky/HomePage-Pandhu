@@ -228,7 +228,46 @@ Future<Database> _openDatabase() async {
 
   Database db = await openDatabase(
     dbPath,
-    version: 1
+    version: 1,
+    onCreate: (Database db, int version) async {
+      // Create main earthquake data table
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS dataGempa (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          tanggal TEXT,
+          jam TEXT,
+          coordinates TEXT,
+          lintang TEXT,
+          bujur TEXT,
+          magnitude TEXT,
+          kedalaman TEXT,
+          wilayah TEXT,
+          potensi TEXT,
+          dirasakan TEXT,
+          shakemap BLOB,
+          jarak REAL
+        )
+      ''');
+      
+      // Create nearest earthquake data table
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS dataGempaTerdekat (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          tanggal TEXT,
+          jam TEXT,
+          coordinates TEXT,
+          lintang TEXT,
+          bujur TEXT,
+          magnitude TEXT,
+          kedalaman TEXT,
+          wilayah TEXT,
+          potensi TEXT,
+          dirasakan TEXT,
+          shakemap BLOB,
+          jarak REAL
+        )
+      ''');
+    }
   );
 
   return db;
@@ -330,60 +369,70 @@ Future<void> _saveToLocalDatabaseNearest(
   print("Data saved to SQLite");
 }
 
+// Move this function outside of main
+Future<String> isLocationInitialized() async {
+  final prefs = await SharedPreferences.getInstance();
+  bool isLocationInitialized = prefs.getBool('locationInitialized') ?? false;
+  if (isLocationInitialized) {
+    return Routes.HOME;
+  } else {
+    return Routes.PERMISSION;
+  }
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await DatabaseHelper().initDatabase();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
 
-  // Initialize Flutter Local Notifications plugin
-  initializeNotifications();
+    // Initialize Flutter Local Notifications plugin
+    initializeNotifications();
 
-  // Initialize Firebase Messaging
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
+    // Initialize Firebase Messaging
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
 
     // Request notification permissions
-  await messaging.requestPermission(
-    alert: true,
-    badge: true,
-    sound: true,
-  );
-  
-  // Subscribe to the 'earthquake-updates' topic
-  await messaging.subscribeToTopic('earthquake-updates');
+    await messaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+    
+    // Subscribe to the 'earthquake-updates' topic
+    await messaging.subscribeToTopic('earthquake-updates');
 
-  // Cancel any existing tasks before registering a new one
-  await Workmanager().cancelAll();
+    // Cancel any existing tasks before registering a new one
+    await Workmanager().cancelAll();
 
-  // Initialize WorkManager
-  readData();
-  Workmanager().initialize(
-      callbackDispatcher, // The top level function, aka callbackDispatcher
-      isInDebugMode:
-          false // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
-      );
-  Workmanager().registerOneOffTask("task-identifier", "simpleTask");
+    // Initialize WorkManager with error handling
+    readData();
+    await Workmanager().initialize(
+      callbackDispatcher,
+      isInDebugMode: false
+    );
+    await Workmanager().registerOneOffTask(
+      "task-identifier", 
+      "simpleTask",
+    ).catchError((error) {
+      print("Failed to register WorkManager task: $error");
+    });
 
-  Future<String> isLocationInitialized() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool isLocationInitialized = prefs.getBool('locationInitialized') ?? false;
-    if (isLocationInitialized) {
-      return Routes.HOME;
-    } else {
-      return Routes.PERMISSION;
-    }
+    HomeController().getHumanReadable();
+    
+    runApp(
+      GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: "Application",
+        initialRoute: await isLocationInitialized(),
+        getPages: AppPages.routes
+      ),
+    );
+  } catch (e) {
+    print("Error during initialization: $e");
+    // Handle initialization errors appropriately
   }
-
-  HomeController().getHumanReadable();
-  
-  runApp(
-    GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "Application",
-      initialRoute: await isLocationInitialized(),
-      getPages: AppPages.routes
-    ),
-  );
 }
