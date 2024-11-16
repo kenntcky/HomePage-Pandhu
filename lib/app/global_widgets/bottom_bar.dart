@@ -87,19 +87,24 @@ class _BottomBarState extends State<BottomBar> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Container(
-                  width: 64,
-                  height: 64,
-                  decoration: ShapeDecoration(
-                    color: Color(0xFFF6643C),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                  ),
+                GestureDetector(
+                  onTap: () {
+                    Get.toNamed(Routes.CHATAI);
+                  },
                   child: Container(
-                    width: 20,
-                    height: 20,
-                    child: Image.asset("asset/img/icon/chat.png"),
+                    width: 64,
+                    height: 64,
+                    decoration: ShapeDecoration(
+                      color: Color(0xFFF6643C),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                    ),
+                    child: Container(
+                      width: 20,
+                      height: 20,
+                      child: Image.asset("asset/img/icon/chat.png"),
+                    ),
                   ),
                 ),
                 SizedBox(
