@@ -89,7 +89,7 @@ class _BottomBarState extends State<BottomBar> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Get.toNamed(Routes.CHATAI);
+                    Get.toNamed(Routes.CHAT);
                   },
                   child: Container(
                     width: 64,
