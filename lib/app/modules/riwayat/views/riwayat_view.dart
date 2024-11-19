@@ -63,8 +63,10 @@ class RiwayatView extends GetView<RiwayatController> {
                                     child: Kotakgempa(
                                       magnitude: gempa['magnitude'] ?? '-',
                                       lokasi: gempa['wilayah'] ?? '-',
-                                      jarak: "${gempa['jarak']}",
-                                      jam: gempa['jam'] ?? '-'
+                                      jarak: "${gempa['jarak']} km",
+                                      jam: gempa['jam'] != null 
+                            ? gempa['jam'].substring(0, 5) + " WIB"
+                            : '-'
                                     ),
                                   );
                                 }).toList(),

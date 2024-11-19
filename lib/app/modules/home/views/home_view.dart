@@ -20,89 +20,94 @@ class HomeView extends GetView<HomeController> {
         children: [
           ListView(
             children: [
-              AppBar(
-                automaticallyImplyLeading: false,
-                backgroundColor: Color(0xFFF7F7F7),
-                title: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Image(
-                          image: AssetImage("asset/img/icon/location.png"),
-                        ),
-                        SizedBox(
-                          width: 8,
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Lokasi Anda,",
-                              style: TextStyle(
-                                color: Color(0xFF666666),
-                                fontSize: 14,
-                                fontFamily: 'Plus Jakarta Sans',
-                                fontWeight: FontWeight.w400,
+              GestureDetector(
+                onTap: () {
+                   Get.toNamed(Routes.GANTILOK_EDITLOK);
+                 },
+                child: AppBar(
+                  automaticallyImplyLeading: false,
+                  backgroundColor: Color(0xFFF7F7F7),
+                  title: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Image(
+                            image: AssetImage("asset/img/icon/location.png"),
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Lokasi Anda,",
+                                style: TextStyle(
+                                  color: Color(0xFF666666),
+                                  fontSize: 14,
+                                  fontFamily: 'Plus Jakarta Sans',
+                                  fontWeight: FontWeight.w400,
+                                ),
                               ),
-                            ),
-                            SizedBox(
-                              height: 4,
-                            ),
-                            SizedBox(height: 4),
-                            // Use FutureBuilder to fetch and display the location asynchronously
-                            FutureBuilder<List<Placemark>>(
-                              future: PermissionController().getPlacemarksFromPrefs(),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState == ConnectionState.waiting) {
-                                  return Text(
-                                    'Memuat lokasi...',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 14,
-                                      fontFamily: 'Plus Jakarta Sans',
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  );
-                                } else if (snapshot.hasError) {
-                                  return Text(
-                                    'Gagal memuat lokasi.',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 14,
-                                      fontFamily: 'Plus Jakarta Sans',
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  );
-                                } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                                  final placemark = snapshot.data![0];
-                                  return Text(
-                                    '${placemark.subAdministrativeArea}, ${placemark.administrativeArea}',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 14,
-                                      fontFamily: 'Plus Jakarta Sans',
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  );
-                                } else {
-                                  return Text(
-                                    'Lokasi tidak ditemukan.',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 14,
-                                      fontFamily: 'Plus Jakarta Sans',
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  );
-                                }
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
+                              SizedBox(
+                                height: 4,
+                              ),
+                              SizedBox(height: 4),
+                              // Use FutureBuilder to fetch and display the location asynchronously
+                              FutureBuilder<List<Placemark>>(
+                                future: PermissionController().getPlacemarksFromPrefs(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return Text(
+                                      'Memuat lokasi...',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 14,
+                                        fontFamily: 'Plus Jakarta Sans',
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    );
+                                  } else if (snapshot.hasError) {
+                                    return Text(
+                                      'Gagal memuat lokasi.',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 14,
+                                        fontFamily: 'Plus Jakarta Sans',
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    );
+                                  } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                                    final placemark = snapshot.data![0];
+                                    return Text(
+                                      '${placemark.subAdministrativeArea}, ${placemark.administrativeArea}',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 14,
+                                        fontFamily: 'Plus Jakarta Sans',
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    );
+                                  } else {
+                                    return Text(
+                                      'Lokasi tidak ditemukan.',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 14,
+                                        fontFamily: 'Plus Jakarta Sans',
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Column(children: [
@@ -281,7 +286,9 @@ class HomeView extends GetView<HomeController> {
                                       magnitude: gempa['magnitude'] ?? '-',
                                       lokasi: gempa['wilayah'] ?? '-',
                                       jarak: "${gempa['jarak']} km",
-                                      jam: gempa['jam'] ?? '-'
+                                      jam: gempa['jam'] != null 
+                            ? gempa['jam'].substring(0, 5) + " WIB"
+                            : '-'
                                     ),
                                   );
                                 }).toList(),
@@ -332,7 +339,9 @@ class HomeView extends GetView<HomeController> {
                                       magnitude: gempa['magnitude'] ?? '-',
                                       lokasi: gempa['wilayah'] ?? '-',
                                       jarak: "${gempa['jarak']} km",
-                                      jam: gempa['jam'] ?? '-'
+                                      jam: gempa['jam'] != null 
+                            ? gempa['jam'].substring(0, 5) + " WIB"
+                            : '-'
                                     ),
                                   );
                                 }).toList(),
@@ -390,7 +399,7 @@ class HomeView extends GetView<HomeController> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Container(
-                    height: 201,
+                    height: 190,
                     decoration: ShapeDecoration(
                       color: Color(0xFF4EB8FF),
                       shape: RoundedRectangleBorder(
@@ -412,7 +421,7 @@ class HomeView extends GetView<HomeController> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
@@ -423,6 +432,9 @@ class HomeView extends GetView<HomeController> {
                                   fontFamily: 'Plus Jakarta Sans',
                                   fontWeight: FontWeight.w600,
                                 ),
+                              ),
+                              SizedBox(
+                                height: 18,
                               ),
                               Container(
                                 width: 210,
@@ -436,18 +448,6 @@ class HomeView extends GetView<HomeController> {
                                   ),
                                   maxLines: 3,
                                   overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 8
-                                ),
-                              Text(
-                                'Hubungi',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontFamily: 'Plus Jakarta Sans',
-                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
                             ],

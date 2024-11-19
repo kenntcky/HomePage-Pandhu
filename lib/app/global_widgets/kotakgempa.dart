@@ -64,7 +64,7 @@ class Kotakgempa extends StatelessWidget {
     return Stack(
       children: [
         Container(
-          height: 217,
+          height: 210,
           width: 187,
           decoration: BoxDecoration(
               color: Colors.white, 
@@ -92,7 +92,7 @@ class Kotakgempa extends StatelessWidget {
                     children: [
                       Text(
                       lokasi,
-                      maxLines: 3,
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: Colors.black,

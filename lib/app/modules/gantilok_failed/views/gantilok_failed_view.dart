@@ -48,6 +48,7 @@ class GantilokFailedView extends GetView<GantilokFailedController> {
                 children: [
                   GestureDetector(
                     onTap: () {
+                      Get.back();
                     },
                     child: Container(
                       width: 350,

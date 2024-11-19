@@ -1,7 +1,8 @@
 import 'package:aplikasi_pandhu/app/global_widgets/kotakgempa.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:geocoding/geocoding.dart';
+import 'package:aplikasi_pandhu/app/modules/permission/controllers/permission_controller.dart';
 import '../controllers/search_controller.dart';
 
 class SearchView extends GetView<SearchPageController> {
@@ -15,12 +16,12 @@ class SearchView extends GetView<SearchPageController> {
         children: [
           AppBar(
                 backgroundColor: Colors.transparent,
-                title: const Column(
+                title: Column(
                   children: [
                     Row(
                       children: [
                         Image(
-                          image: AssetImage("asset/img/location.png"),
+                          image: AssetImage("asset/img/icon/location.png"),
                         ),
                         SizedBox(
                           width: 8,
@@ -41,14 +42,52 @@ class SearchView extends GetView<SearchPageController> {
                             SizedBox(
                               height: 4,
                             ),
-                            Text(
-                              'Semarang, Jawa Tengah',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
-                                fontFamily: 'Plus Jakarta Sans',
-                                fontWeight: FontWeight.bold,
-                              ),
+                            FutureBuilder<List<Placemark>>(
+                              future: PermissionController().getPlacemarksFromPrefs(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return Text(
+                                    'Memuat lokasi...',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                      fontFamily: 'Plus Jakarta Sans',
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  );
+                                } else if (snapshot.hasError) {
+                                  return Text(
+                                    'Gagal memuat lokasi.',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                      fontFamily: 'Plus Jakarta Sans',
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  );
+                                } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                                  final placemark = snapshot.data![0];
+                                  return Text(
+                                    '${placemark.subAdministrativeArea}, ${placemark.administrativeArea}',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                      fontFamily: 'Plus Jakarta Sans',
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  );
+                                } else {
+                                  return Text(
+                                    'Lokasi tidak ditemukan.',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                      fontFamily: 'Plus Jakarta Sans',
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  );
+                                }
+                              },
                             ),
                           ],
                         ),
@@ -114,7 +153,9 @@ class SearchView extends GetView<SearchPageController> {
                         magnitude: gempa['magnitude'] ?? '-',
                         lokasi: gempa['wilayah'] ?? '-',
                         jarak: "${gempa['jarak']} km",
-                        jam: gempa['jam'] ?? '-',
+                        jam: gempa['jam'] != null 
+                            ? gempa['jam'].substring(0, 5) + " WIB"
+                            : '-',
                       );
                     },
                   ),

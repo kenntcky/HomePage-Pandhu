@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-
+import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
-
+import '../../permission/controllers/permission_controller.dart';
 import '../controllers/gantilok_editlok_controller.dart';
+import '../../gantilok_success/views/gantilok_success_view.dart';
+import '../../gantilok_failed/views/gantilok_failed_view.dart';
 
 class GantilokEditlokView extends GetView<GantilokEditlokController> {
   const GantilokEditlokView({super.key});
-  void _showPermissionDialog() {
+  void _showPermissionDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -42,7 +44,7 @@ class GantilokEditlokView extends GetView<GantilokEditlokController> {
                 children: [
                   TextButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      Get.back();
                     },
                     child: const Text(
                       "Tidak",
@@ -53,8 +55,30 @@ class GantilokEditlokView extends GetView<GantilokEditlokController> {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
+                    onPressed: () async {
+                      final permissionController = PermissionController();
+                      try {
+                        // This will handle location service check and permissions
+                        await permissionController.determinePosition();
+                        
+                        // Get the placemarks after location is updated
+                        List<Placemark> placemarks = await permissionController.getPlacemarksFromPrefs();
+                        
+                        if (placemarks.isEmpty) {
+                          // If no placemarks were retrieved, show failed view
+                          Navigator.of(context).pop(); // Close the dialog
+                          Get.to(() => const GantilokFailedView());
+                          return;
+                        }
+                        
+                        // Navigate to success view with location data
+                        Navigator.of(context).pop(); // Close the dialog
+                        Get.to(() => const GantilokSuccessView(), arguments: placemarks[0]);
+                      } catch (e) {
+                        print("Error updating location: $e");
+                        Navigator.of(context).pop(); // Close the dialog
+                        Get.to(() => const GantilokFailedView());
+                      }
                     },
                     child: const Text(
                       "Izinkan & Aktifkan",
@@ -114,7 +138,7 @@ class GantilokEditlokView extends GetView<GantilokEditlokController> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      // Aksi tombol "Tidak"
+                      Get.back();
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.4,
@@ -142,7 +166,7 @@ class GantilokEditlokView extends GetView<GantilokEditlokController> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: _showPermissionDialog,
+                    onTap: () => _showPermissionDialog(context),
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.4,
                       height: 52,
