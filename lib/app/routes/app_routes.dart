@@ -10,7 +10,11 @@ abstract class Routes {
   static const PERMISSION = _Paths.PERMISSION;
   static const SEARCH = _Paths.SEARCH;
   static const REPORT = _Paths.REPORT;
-  static const CHATAI = _Paths.CHATAI;
+  static const CHAT = _Paths.CHAT;
+  static const WARNING = _Paths.WARNING;
+  static const GANTILOK_FAILED = _Paths.GANTILOK_FAILED;
+  static const GANTILOK_SUCCESS = _Paths.GANTILOK_SUCCESS;
+  static const GANTILOK_EDITLOK = _Paths.GANTILOK_EDITLOK;
 }
 
 abstract class _Paths {
@@ -22,5 +26,9 @@ abstract class _Paths {
   static const PERMISSION = '/permission';
   static const SEARCH = '/search';
   static const REPORT = '/report';
-  static const CHATAI = '/chatai';
+  static const CHAT = '/chat';
+  static const WARNING = '/warning';
+  static const GANTILOK_FAILED = '/gantilok-failed';
+  static const GANTILOK_SUCCESS = '/gantilok-success';
+  static const GANTILOK_EDITLOK = '/gantilok-editlok';
 }

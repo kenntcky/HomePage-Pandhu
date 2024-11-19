@@ -1,19 +1,24 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 
-import '../../global_widgets/chatai/chat_bubble.dart';
+import 'package:get/get.dart';
+
+import '../controllers/chat_controller.dart';
+import '../local_widget/avatar.dart';
+import '../local_widget/chat_bubble.dart';
+import '../local_widget/chat_footer.dart';
 
 const apiKey = "";
 
-class ChatPage extends StatefulWidget {
-  const ChatPage({super.key});
+class ChatView extends StatefulWidget {
+  const ChatView({super.key});
 
   @override
-  State<ChatPage> createState() => _ChatPageState();
+  State<ChatView> createState() => _ChatViewState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+class _ChatViewState extends State<ChatView> {
   final model = GenerativeModel(model: 'gemini-pro', apiKey: apiKey);
 
   TextEditingController messageController = TextEditingController();

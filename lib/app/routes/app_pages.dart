@@ -2,6 +2,14 @@ import 'package:get/get.dart';
 
 import '../modules/Report/bindings/report_binding.dart';
 import '../modules/Report/views/report_view.dart';
+import '../modules/chat/bindings/chat_binding.dart';
+import '../modules/chat/views/chat_view.dart';
+import '../modules/gantilok_editlok/bindings/gantilok_editlok_binding.dart';
+import '../modules/gantilok_editlok/views/gantilok_editlok_view.dart';
+import '../modules/gantilok_failed/bindings/gantilok_failed_binding.dart';
+import '../modules/gantilok_failed/views/gantilok_failed_view.dart';
+import '../modules/gantilok_success/bindings/gantilok_success_binding.dart';
+import '../modules/gantilok_success/views/gantilok_success_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/onboarding/bindings/onboarding_binding.dart';
@@ -14,7 +22,8 @@ import '../modules/search/bindings/search_binding.dart';
 import '../modules/search/views/search_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
-import '../modules/chatai/chat_page.dart';
+import '../modules/warning/bindings/warning_binding.dart';
+import '../modules/warning/views/warning_view.dart';
 
 part 'app_routes.dart';
 
@@ -58,8 +67,29 @@ class AppPages {
       binding: ReportBinding(),
     ),
     GetPage(
-      name: _Paths.CHATAI,
-      page: () => const ChatPage(),
+      name: _Paths.CHAT,
+      page: () => const ChatView(),
+      binding: ChatBinding(),
+    ),
+    GetPage(
+      name: _Paths.WARNING,
+      page: () => const WarningView(),
+      binding: WarningBinding(),
+    ),
+    GetPage(
+      name: _Paths.GANTILOK_FAILED,
+      page: () => const GantilokFailedView(),
+      binding: GantilokFailedBinding(),
+    ),
+    GetPage(
+      name: _Paths.GANTILOK_SUCCESS,
+      page: () => const GantilokSuccessView(),
+      binding: GantilokSuccessBinding(),
+    ),
+    GetPage(
+      name: _Paths.GANTILOK_EDITLOK,
+      page: () => const GantilokEditlokView(),
+      binding: GantilokEditlokBinding(),
     ),
   ];
 }
