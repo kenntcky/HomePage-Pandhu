@@ -1,15 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
-
-import 'package:get/get.dart';
-
-import '../controllers/chat_controller.dart';
-import '../local_widget/avatar.dart';
 import '../local_widget/chat_bubble.dart';
-import '../local_widget/chat_footer.dart';
-
-const apiKey = "";
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ChatView extends StatefulWidget {
   const ChatView({super.key});
@@ -19,7 +12,7 @@ class ChatView extends StatefulWidget {
 }
 
 class _ChatViewState extends State<ChatView> {
-  final model = GenerativeModel(model: 'gemini-pro', apiKey: apiKey);
+  final model = GenerativeModel(model: 'gemini-pro', apiKey: dotenv.env['GEMINI_API_KEY'] ?? '');
 
   TextEditingController messageController = TextEditingController();
 

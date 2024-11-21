@@ -44,6 +44,7 @@
     google_generative_ai: ^0.2.2
     markdown_widget: ^2.3.2+1
     flutter_markdown: ^0.6.18
+    flutter_dotenv: ^5.2.1
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -61,6 +62,7 @@
   dev_dependencies:
     flutter_test:
       sdk: flutter
+    flutter_launcher_icons: ^0.13.1
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -85,6 +87,7 @@
       - asset/img/icon/
       - asset/img/image/
       - asset/img/logo/
+      - .env
     # - asset/fonts/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -107,3 +110,10 @@
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+  flutter_launcher_icons:
+    android: "ic_launcher"
+    ios: true
+    image_path: "asset/img/icon/logo.png"
+    min_sdk_android: 21 # android min sdk min:16, default 21
+    remove_alpha_ios: true
