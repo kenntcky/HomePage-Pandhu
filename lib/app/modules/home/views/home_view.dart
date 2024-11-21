@@ -1,6 +1,6 @@
-import 'package:aplikasi_pandhu/app/global_widgets/bottom_bar.dart';
+import 'package:aplikasi_pandhu/app/global_widgets/nav_bar.dart';
 import 'package:aplikasi_pandhu/app/modules/home/local_widgets/artikel.dart';
-import 'package:aplikasi_pandhu/app/global_widgets/kotakgempa.dart';
+import 'package:aplikasi_pandhu/app/global_widgets/kotak_gempa.dart';
 import 'package:aplikasi_pandhu/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -594,7 +594,7 @@ class HomeView extends GetView<HomeController> {
               )
             ],
           ),
-          BottomBar()
+          Navbar()
         ],
       ),
     );

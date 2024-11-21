@@ -73,7 +73,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.WARNING,
-      page: () => const WarningView(),
+      page: () => WarningView(),
       binding: WarningBinding(),
     ),
     GetPage(

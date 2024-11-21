@@ -1,4 +1,4 @@
-import 'package:aplikasi_pandhu/app/global_widgets/kotakgempa.dart';
+import 'package:aplikasi_pandhu/app/global_widgets/kotak_gempa.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:geocoding/geocoding.dart';
