@@ -4,6 +4,8 @@ import '../modules/Report/bindings/report_binding.dart';
 import '../modules/Report/views/report_view.dart';
 import '../modules/chat/bindings/chat_binding.dart';
 import '../modules/chat/views/chat_view.dart';
+import '../modules/detail_gempa/bindings/detail_gempa_binding.dart';
+import '../modules/detail_gempa/views/detail_gempa_view.dart';
 import '../modules/gantilok_editlok/bindings/gantilok_editlok_binding.dart';
 import '../modules/gantilok_editlok/views/gantilok_editlok_view.dart';
 import '../modules/gantilok_failed/bindings/gantilok_failed_binding.dart';
@@ -90,6 +92,11 @@ class AppPages {
       name: _Paths.GANTILOK_EDITLOK,
       page: () => const GantilokEditlokView(),
       binding: GantilokEditlokBinding(),
+    ),
+    GetPage(
+      name: _Paths.DETAIL_GEMPA,
+      page: () => const Googlemapflutter(),
+      binding: DetailGempaBinding(),
     ),
   ];
 }

@@ -15,6 +15,7 @@ abstract class Routes {
   static const GANTILOK_FAILED = _Paths.GANTILOK_FAILED;
   static const GANTILOK_SUCCESS = _Paths.GANTILOK_SUCCESS;
   static const GANTILOK_EDITLOK = _Paths.GANTILOK_EDITLOK;
+  static const DETAIL_GEMPA = _Paths.DETAIL_GEMPA;
 }
 
 abstract class _Paths {
@@ -31,4 +32,5 @@ abstract class _Paths {
   static const GANTILOK_FAILED = '/gantilok-failed';
   static const GANTILOK_SUCCESS = '/gantilok-success';
   static const GANTILOK_EDITLOK = '/gantilok-editlok';
+  static const DETAIL_GEMPA = '/detail-gempa';
 }

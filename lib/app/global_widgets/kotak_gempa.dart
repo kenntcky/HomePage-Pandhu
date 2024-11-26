@@ -5,6 +5,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'dart:math' show cos, sqrt, asin;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get/get.dart';
+import 'package:aplikasi_pandhu/app/routes/app_pages.dart';
 
 Future<String> calculateDistance(double gempaLat, double gempaLon) async {
     final prefs = await SharedPreferences.getInstance();
@@ -61,123 +63,128 @@ class Kotakgempa extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          height: 210,
-          width: 187,
-          decoration: BoxDecoration(
-              color: Colors.white, 
-              borderRadius: BorderRadius.circular(10)
-              ),
-          // alignment: Alignment.topCenter,
-          child: Padding(
-            padding: const EdgeInsets.all(6),
-            child: Column(
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  height: 97,
-                  width: 175,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage("asset/img/image/display-kotakgempa.png"),
-                        fit: BoxFit.fill
-                      ),
-                      borderRadius: BorderRadius.circular(4)),
+    return GestureDetector(
+      onTap: () {
+        Get.toNamed(Routes.DETAIL_GEMPA);
+      },
+      child: Stack(
+        children: [
+          Container(
+            height: 210,
+            width: 187,
+            decoration: BoxDecoration(
+                color: Colors.white, 
+                borderRadius: BorderRadius.circular(10)
                 ),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                      lokasi,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontFamily: 'Plus Jakarta Sans',
-                        fontWeight: FontWeight.w600,
+            // alignment: Alignment.topCenter,
+            child: Padding(
+              padding: const EdgeInsets.all(6),
+              child: Column(
+                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    height: 97,
+                    width: 175,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage("asset/img/image/display-kotakgempa.png"),
+                          fit: BoxFit.fill
                         ),
-                      ),
-                      Row(
-                      textBaseline: TextBaseline.ideographic,
+                        borderRadius: BorderRadius.circular(4)),
+                  ),
+                  Expanded(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
+                        Text(
+                        lokasi,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontFamily: 'Plus Jakarta Sans',
+                          fontWeight: FontWeight.w600,
+                          ),
+                        ),
                         Row(
-                          children: [
-                            Image.asset(
-                              "asset/img/icon/location.png",
-                              width: 16,
-                              height: 16,
+                        textBaseline: TextBaseline.ideographic,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              Image.asset(
+                                "asset/img/icon/location.png",
+                                width: 16,
+                                height: 16,
+                              ),
+                              SizedBox(
+                                width: 2,
+                              ),
+                              Text(
+                              jarak,
+                              style: TextStyle(
+                                color: Color(0xFF666666),
+                                fontSize: 12,
+                                fontFamily: 'Plus Jakarta Sans',
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
-                            SizedBox(
-                              width: 2,
-                            ),
-                            Text(
-                            jarak,
+                          ],
+                          ),
+                          Text(
+                            "${jam}",
                             style: TextStyle(
                               color: Color(0xFF666666),
                               fontSize: 12,
                               fontFamily: 'Plus Jakarta Sans',
                               fontWeight: FontWeight.w400,
                             ),
-                          ),
+                          )
                         ],
-                        ),
-                        Text(
-                          "${jam}",
-                          style: TextStyle(
-                            color: Color(0xFF666666),
-                            fontSize: 12,
-                            fontFamily: 'Plus Jakarta Sans',
-                            fontWeight: FontWeight.w400,
-                          ),
                         )
                       ],
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 12),
-          child: Container(
-            width: 81,
-            height: 33,
-            decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.30000001192092896),
-                borderRadius: BorderRadius.circular(50)),
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 2, horizontal: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.warning_amber_rounded,
-                    color: Color(0xFFF6643C),
-                  ),
-                  Text(
-                    '$magnitude M',
-                    style: TextStyle(
-                      color: Color(0xFFF6643C),
-                      fontSize: 12,
-                      fontFamily: 'Plus Jakarta Sans',
-                      fontWeight: FontWeight.w400,
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
           ),
-        )
-      ],
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 12),
+            child: Container(
+              width: 81,
+              height: 33,
+              decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.30000001192092896),
+                  borderRadius: BorderRadius.circular(50)),
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 2, horizontal: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.warning_amber_rounded,
+                      color: Color(0xFFF6643C),
+                    ),
+                    Text(
+                      '$magnitude M',
+                      style: TextStyle(
+                        color: Color(0xFFF6643C),
+                        fontSize: 12,
+                        fontFamily: 'Plus Jakarta Sans',
+                        fontWeight: FontWeight.w400,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

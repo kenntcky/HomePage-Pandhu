@@ -1,4 +1,5 @@
 import 'package:aplikasi_pandhu/app/global_widgets/nav_bar.dart';
+import 'package:aplikasi_pandhu/app/modules/home/local_widgets/alert_gempa/alert_gempa.dart';
 import 'package:aplikasi_pandhu/app/modules/home/local_widgets/artikel.dart';
 import 'package:aplikasi_pandhu/app/global_widgets/kotak_gempa.dart';
 import 'package:aplikasi_pandhu/app/routes/app_pages.dart';
@@ -140,90 +141,7 @@ class HomeView extends GetView<HomeController> {
                 SizedBox(
                   height: 20,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Container(
-                    width: 382,
-                    height: 201,
-                    decoration: ShapeDecoration(
-                      color: Color(0xFFF6643C),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      shadows: const [
-                        BoxShadow(
-                          color: Color(0x99F6643C),
-                          blurRadius: 20,
-                          offset: Offset(0, 4),
-                          spreadRadius: 0,
-                        )
-                      ],
-                    ),
-                    child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Column(
-                              children: [
-                                Text(
-                                'Gempa Sedang Terjadi',
-                                style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontFamily: 'Plus Jakarta Sans',
-                                fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 16,
-                                ),
-                                Container(
-                                  width: 210,
-                                  child: Text(
-                                    'Hati-hati gempa sedang terjadi di wilayah Kota Semarang. Berpotensi tsunami dari pantai Marina.',
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      color: Color(0xFFFBC1B1),
-                                      fontSize: 14,
-                                      fontFamily: 'Plus Jakarta Sans',
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Text(
-                              'Selengkapnya',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
-                                fontFamily: 'Plus Jakarta Sans',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Flexible(
-                          child: AspectRatio(
-                            aspectRatio: 1, // This maintains a square aspect ratio for the image
-                            child: Image.asset(
-                              "asset/img/image/gempa.png",
-                              fit: BoxFit.contain, // Preserves image proportions and scales to fit
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
-                    ),
-                  ),
-                ),
+                alert_Gempa(),
                 SizedBox(
                   height: 20,
                 ),
@@ -439,7 +357,7 @@ class HomeView extends GetView<HomeController> {
                               Container(
                                 width: 210,
                                 child: Text(
-                                  'Hubungi BMKG atau BPBD kota Anda untuk mendapatkan bantuan dan informasi yang lebih terperinci',
+                                  'Hubungi BMKG atau BPBD kota Anda untuk mendapatkan informasi terperinci',
                                   style: TextStyle(
                                     color: Color(0xFFB9E3FF),
                                     fontSize: 14,

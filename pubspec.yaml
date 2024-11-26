@@ -44,6 +44,7 @@
     google_generative_ai: ^0.2.2
     markdown_widget: ^2.3.2+1
     flutter_markdown: ^0.6.18
+    google_maps_flutter: ^2.10.0
 
 
   # The following adds the Cupertino Icons font to your application.
