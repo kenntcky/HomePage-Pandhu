@@ -15,6 +15,7 @@ import 'app/modules/home/controllers/home_controller.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'dart:math' show cos, sqrt, asin;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 // Initialize notifications
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -382,6 +383,18 @@ Future<String> isLocationInitialized() async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Load .env file before anything else
+  try {
+    await dotenv.load();
+    print("Environment loaded successfully");
+    if (dotenv.env['GEMINI_API_KEY'] == null) {
+      print("Warning: GEMINI_API_KEY not found in environment");
+    }
+  } catch (e) {
+    print("Error loading environment: $e");
+  }
+  
   await DatabaseHelper().initDatabase();
 
   try {
