@@ -68,25 +68,28 @@ class OnboardingView extends GetView<OnboardingController> {
           SizedBox(
             height: 130,
           ),
-          Container(
-            width: 382,
-            height: 52,
-            padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
-            decoration: ShapeDecoration(
-                color: Color(0xFFF6643C),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                )),
-            child: Text(
-              'Lanjutkan',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontFamily: 'Plus Jakarta Sans',
-                fontWeight: FontWeight.w600,
-                height: 0,
+          GestureDetector(
+            onTap: () => controller.completeOnboarding(),
+            child: Container(
+              width: 382,
+              height: 52,
+              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+              decoration: ShapeDecoration(
+                  color: Color(0xFFF6643C),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  )),
+              child: Text(
+                'Lanjutkan',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontFamily: 'Plus Jakarta Sans',
+                  fontWeight: FontWeight.w600,
+                  height: 0,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
             ),
           ),
           SizedBox(

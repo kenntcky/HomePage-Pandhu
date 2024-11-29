@@ -370,9 +370,17 @@ Future<void> _saveToLocalDatabaseNearest(
   print("Data saved to SQLite");
 }
 
-// Move this function outside of main
-Future<String> isLocationInitialized() async {
+// Update the isLocationInitialized function
+Future<String> determineInitialRoute() async {
   final prefs = await SharedPreferences.getInstance();
+  bool hasSeenOnboarding = prefs.getBool('hasSeenOnboarding') ?? false;
+  
+  // If user hasn't seen onboarding, show it first
+  if (!hasSeenOnboarding) {
+    return Routes.ONBOARDING;
+  }
+  
+  // Otherwise, check location initialization
   bool isLocationInitialized = prefs.getBool('locationInitialized') ?? false;
   if (isLocationInitialized) {
     return Routes.HOME;
@@ -440,7 +448,7 @@ void main() async {
       GetMaterialApp(
         debugShowCheckedModeBanner: false,
         title: "Application",
-        initialRoute: await isLocationInitialized(),
+        initialRoute: await determineInitialRoute(),
         getPages: AppPages.routes
       ),
     );

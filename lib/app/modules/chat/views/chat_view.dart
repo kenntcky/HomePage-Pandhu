@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:google_generative_ai/google_generative_ai.dart';
 import '../local_widget/chat_bubble.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import '../services/groq_service.dart';
 
 class ChatView extends StatefulWidget {
   const ChatView({super.key});
@@ -12,7 +12,7 @@ class ChatView extends StatefulWidget {
 }
 
 class _ChatViewState extends State<ChatView> {
-  final model = GenerativeModel(model: 'gemini-pro', apiKey: dotenv.env['GEMINI_API_KEY'] ?? '');
+  final groqService = GroqService(apiKey: "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");
 
   TextEditingController messageController = TextEditingController();
 
@@ -118,36 +118,52 @@ class _ChatViewState extends State<ChatView> {
                             icon: const Image(
                                 image: AssetImage("asset/img/icon/send-2.png")),
                             onPressed: () async {
+                              if (messageController.text.trim().isEmpty) return;
+                              
                               setState(() {
                                 isLoading = true;
                               });
 
-                              final content = [
-                                Content.text(messageController.text)
-                              ];
-
-                              final GenerateContentResponse responseAi =
-                                  await model.generateContent(content);
-
-                              chatBubbles = [
-                                ...chatBubbles,
-                                ChatBubble(
+                              // Add user message
+                              setState(() {
+                                chatBubbles = [
+                                  ...chatBubbles,
+                                  ChatBubble(
                                     direction: Direction.right,
                                     message: messageController.text,
                                     photoUrl: null,
-                                    type: BubbleType.alone)
-                              ]; //Bubblechat
+                                    type: BubbleType.alone
+                                  )
+                                ];
+                              });
 
-                              chatBubbles = [
-                                ...chatBubbles,
-                                ChatBubble(
-                                    direction: Direction.left,
-                                    message: responseAi.text ??
-                                        'Maaf, saay tidak mengerti',
-                                    photoUrl:
-                                        'https://i.pravatar.cc/150?img=47',
-                                    type: BubbleType.alone)
-                              ];
+                              try {
+                                // Get response from Groq
+                                final response = await groqService.generateResponse(messageController.text);
+                                
+                                setState(() {
+                                  chatBubbles = [
+                                    ...chatBubbles,
+                                    ChatBubble(
+                                      direction: Direction.left,
+                                      message: response,
+                                      photoUrl: null,
+                                      type: BubbleType.alone
+                                    )
+                                  ];
+                                });
+                              } catch (e) {
+                                setState(() {
+                                  chatBubbles = [
+                                    ...chatBubbles,
+                                    const ChatBubble(
+                                      direction: Direction.left,
+                                      message: 'Maaf, saya sedang mengalami gangguan',
+                                      type: BubbleType.alone
+                                    )
+                                  ];
+                                });
+                              }
 
                               messageController.clear();
                               setState(() {

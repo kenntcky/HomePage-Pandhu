@@ -46,11 +46,9 @@ class PermissionController extends GetxController {
     await prefs.setDouble('userLon', userLoc.longitude);
     await getAndSetHumanReadable();
     
-    // Only navigate to home if this is the initial permission check
-    if (!(await prefs.getBool('locationInitialized') ?? false)) {
-      await prefs.setBool('locationInitialized', true);
-      Get.toNamed(Routes.HOME);
-    }
+    // Update location initialization status and navigate
+    await prefs.setBool('locationInitialized', true);
+    Get.offAllNamed(Routes.HOME); // Use offAllNamed to clear the navigation stack
     
     return userLoc;
   }

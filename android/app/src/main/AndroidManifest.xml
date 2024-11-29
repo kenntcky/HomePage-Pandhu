@@ -6,7 +6,7 @@
 
 
     <application
-        android:label="aplikasi_pandhu"
+        android:label="Pandhu"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <receiver

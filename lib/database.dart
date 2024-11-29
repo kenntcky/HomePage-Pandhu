@@ -1,7 +1,6 @@
   // lib/database_helper.dart
   import 'package:sqflite/sqflite.dart';
   import 'package:path/path.dart';
-  import 'package:shared_preferences/shared_preferences.dart';
 
   class DatabaseHelper {
     static final DatabaseHelper _instance = DatabaseHelper._internal();
@@ -21,13 +20,9 @@
     }
 
     Future<Database> initDatabase() async {
-      final prefs = await SharedPreferences.getInstance();
-      bool isDatabaseInitialized = prefs.getBool('dbInitialized') ?? false;
       String path = join(await getDatabasesPath(), 'dataGempa.db');
 
-      if (!isDatabaseInitialized){
-        await prefs.setBool('dbInitialized', true);
-        return await openDatabase(
+      return await openDatabase(
         path,
         version: 1,
         onCreate: (db, version) async {
@@ -71,9 +66,6 @@
           ''');
         },
       );
-      } else {
-        return await openDatabase(path);
-      }
     }
 
     Future<List<Map<String, dynamic>>> getLatestGempa() async {
@@ -96,51 +88,25 @@
     }
 
     Future<List<Map<String, dynamic>>> getAllGempa() async {
-      final prefs = await SharedPreferences.getInstance();
-      bool dbIsset = prefs.getBool('dbSet') ?? false;
-
-      const maxRetries = 20;
-      int retries = 0;
-      while (!dbIsset) {
-        if (dbIsset) {
-          break;
-        }
-
-        if (retries >= maxRetries) {
-          return [];
-        }
-
-        // Wait for 1500 milliseconds before checking again
-        await Future.delayed(Duration(milliseconds: 1500));
-        retries++;
+      try {
+        final db = await database;
+        final results = await db.query('dataGempa', orderBy: 'id DESC');
+        return results;
+      } catch (e) {
+        print('Error fetching data: $e');
+        return [];
       }
-
-      final db = await database;
-      return await db.query('dataGempa');
     }
 
-      Future<List<Map<String, dynamic>>> getAllGempaNearest() async {
-      final prefs = await SharedPreferences.getInstance();
-      bool dbIsset = prefs.getBool('dbSet') ?? false;
-
-      const maxRetries = 20;
-      int retries = 0;
-      while (!dbIsset) {
-        if (dbIsset) {
-          break;
-        }
-
-        if (retries >= maxRetries) {
-          return [];
-        }
-
-        // Wait for 1500 milliseconds before checking again
-        await Future.delayed(Duration(milliseconds: 1500));
-        retries++;
+    Future<List<Map<String, dynamic>>> getAllGempaNearest() async {
+      try {
+        final db = await database;
+        final results = await db.query('dataGempaTerdekat', orderBy: 'id DESC');
+        return results;
+      } catch (e) {
+        print('Error fetching nearest data: $e');
+        return [];
       }
-
-      final db = await database;
-      return await db.query('dataGempaTerdekat');
     }
 
     Future<void> deleteAll() async {
