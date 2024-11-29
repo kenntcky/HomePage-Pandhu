@@ -12,8 +12,8 @@ class ChatView extends StatefulWidget {
 }
 
 class _ChatViewState extends State<ChatView> {
-  final groqService = GroqService(apiKey: "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");
-
+  final groqService = GroqService(apiKey: dotenv.env['GROQ_API_KEY']!);
+  
   TextEditingController messageController = TextEditingController();
 
   bool isLoading = false;
