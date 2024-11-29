@@ -1,6 +1,7 @@
-import 'package:aplikasi_pandhu/app/global_widgets/bottom_bar.dart';
+import 'package:aplikasi_pandhu/app/global_widgets/nav_bar.dart';
+import 'package:aplikasi_pandhu/app/modules/home/local_widgets/alert_gempa/alert_gempa.dart';
 import 'package:aplikasi_pandhu/app/modules/home/local_widgets/artikel.dart';
-import 'package:aplikasi_pandhu/app/global_widgets/kotakgempa.dart';
+import 'package:aplikasi_pandhu/app/global_widgets/kotak_gempa.dart';
 import 'package:aplikasi_pandhu/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,123 +18,200 @@ class HomeView extends GetView<HomeController> {
       backgroundColor: Color(0xFFF7F7F7),
       body: Stack(
         children: [
-          RefreshIndicator(
-            onRefresh: () => controller.refreshData(),
-            child: ListView(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                     Get.toNamed(Routes.GANTILOK_EDITLOK);
-                   },
-                  child: AppBar(
-                    automaticallyImplyLeading: false,
-                    backgroundColor: Color(0xFFF7F7F7),
-                    title: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Image(
-                              image: AssetImage("asset/img/icon/location.png"),
-                            ),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Lokasi Anda,",
-                                  style: TextStyle(
-                                    color: Color(0xFF666666),
-                                    fontSize: 14,
-                                    fontFamily: 'Plus Jakarta Sans',
-                                    fontWeight: FontWeight.w400,
-                                  ),
+          ListView(
+            children: [
+              GestureDetector(
+                onTap: () {
+                   Get.toNamed(Routes.GANTILOK_EDITLOK);
+                 },
+                child: AppBar(
+                  automaticallyImplyLeading: false,
+                  backgroundColor: Color(0xFFF7F7F7),
+                  title: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Image(
+                            image: AssetImage("asset/img/icon/location.png"),
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Lokasi Anda,",
+                                style: TextStyle(
+                                  color: Color(0xFF666666),
+                                  fontSize: 14,
+                                  fontFamily: 'Plus Jakarta Sans',
+                                  fontWeight: FontWeight.w400,
                                 ),
-                                SizedBox(
-                                  height: 4,
-                                ),
-                                SizedBox(height: 4),
-                                // Use FutureBuilder to fetch and display the location asynchronously
-                                FutureBuilder<List<Placemark>>(
-                                  future: PermissionController().getPlacemarksFromPrefs(),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState == ConnectionState.waiting) {
-                                      return Text(
-                                        'Memuat lokasi...',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 14,
-                                          fontFamily: 'Plus Jakarta Sans',
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      );
-                                    } else if (snapshot.hasError) {
-                                      return Text(
-                                        'Gagal memuat lokasi.',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 14,
-                                          fontFamily: 'Plus Jakarta Sans',
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      );
-                                    } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                                      final placemark = snapshot.data![0];
-                                      return Text(
-                                        '${placemark.subAdministrativeArea}, ${placemark.administrativeArea}',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 14,
-                                          fontFamily: 'Plus Jakarta Sans',
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      );
-                                    } else {
-                                      return Text(
-                                        'Lokasi tidak ditemukan.',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 14,
-                                          fontFamily: 'Plus Jakarta Sans',
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      );
-                                    }
-                                  },
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
+                              ),
+                              SizedBox(
+                                height: 4,
+                              ),
+                              SizedBox(height: 4),
+                              // Use FutureBuilder to fetch and display the location asynchronously
+                              FutureBuilder<List<Placemark>>(
+                                future: PermissionController().getPlacemarksFromPrefs(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return Text(
+                                      'Memuat lokasi...',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 14,
+                                        fontFamily: 'Plus Jakarta Sans',
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    );
+                                  } else if (snapshot.hasError) {
+                                    return Text(
+                                      'Gagal memuat lokasi.',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 14,
+                                        fontFamily: 'Plus Jakarta Sans',
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    );
+                                  } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                                    final placemark = snapshot.data![0];
+                                    return Text(
+                                      '${placemark.subAdministrativeArea}, ${placemark.administrativeArea}',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 14,
+                                        fontFamily: 'Plus Jakarta Sans',
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    );
+                                  } else {
+                                    return Text(
+                                      'Lokasi tidak ditemukan.',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 14,
+                                        fontFamily: 'Plus Jakarta Sans',
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Column(children: [
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    onTap: () {
+                      Get.toNamed(Routes.SEARCH);
+                    },
+                    textAlignVertical: TextAlignVertical.center,
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.search),
+                      hintText: "Cari informasi gempa",
+                      contentPadding: EdgeInsets.zero,
+                      hintStyle: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      fillColor: Colors.white,
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide:
+                            BorderSide(width: 0, style: BorderStyle.none),
+                      ),
                     ),
                   ),
                 ),
-                Column(children: [
-                  Padding(
-                    padding: EdgeInsets.all(10),
-                    child: TextField(
-                      readOnly: true,
-                      onTap: () {
-                        Get.toNamed(Routes.SEARCH);
-                      },
-                      textAlignVertical: TextAlignVertical.center,
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.search),
-                        hintText: "Cari informasi gempa",
-                        contentPadding: EdgeInsets.zero,
-                        hintStyle: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        fillColor: Colors.white,
-                        filled: true,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
-                          borderSide:
-                              BorderSide(width: 0, style: BorderStyle.none),
+                SizedBox(
+                  height: 20,
+                ),
+                alert_Gempa(),
+                SizedBox(
+                  height: 20,
+                ),
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Gempa Terkini',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontFamily: 'Plus Jakarta Sans',
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                                Get.toNamed(Routes.RIWAYAT);
+                            },
+                            child: Text(
+                              'Lebih Detail',
+                              style: TextStyle(
+                                color: Color(0xFF3BABF6),
+                                fontSize: 14,
+                                fontFamily: 'Plus Jakarta Sans',
+                                fontWeight: FontWeight.w600,
+                                height: 0.11,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(15, 0, 0, 20),
+                      child: Container(
+                        height: 230,
+                        child: FutureBuilder<List<Map<String, dynamic>>>(
+                          future: DatabaseHelper().getAllGempa(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return const Center(child: CircularProgressIndicator()); // Show loading spinner
+                            } else if (snapshot.hasError) {
+                              return const Center(child: Text('Gagal ')); // Handle error
+                            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                              return const Center(child: Text('Tidak ada data')); // Handle empty data
+                            } else {
+                              List<Map<String, dynamic>> gempaData = snapshot.data!;
+
+                              return ListView(
+                                scrollDirection: Axis.horizontal,
+                                children: gempaData.take(10).map((gempa) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(right: 10.0),
+                                    child: Kotakgempa(
+                                      magnitude: gempa['magnitude'] ?? '-',
+                                      lokasi: gempa['wilayah'] ?? '-',
+                                      jarak: "${gempa['jarak']} km",
+                                      jam: gempa['jam'] != null 
+                            ? gempa['jam'].substring(0, 5) + " WIB"
+                            : '-'
+                                    ),
+                                  );
+                                }).toList(),
+                              );
+                            }
+                          },
                         ),
                       ),
                     ),
@@ -600,7 +678,7 @@ class HomeView extends GetView<HomeController> {
               ],
             ),
           ),
-          BottomBar()
+          Navbar()
         ],
       ),
     );

@@ -1,23 +1,15 @@
 import 'package:get/get.dart';
 
 class WarningController extends GetxController {
-  //TODO: Implement WarningController
+  // State untuk mengontrol tampilan pertama dan kedua
+  RxBool isWarningVisible = true.obs;
 
-  final count = 0.obs;
   @override
   void onInit() {
     super.onInit();
+    // Timer untuk mengatur pergantian tampilan
+    Future.delayed(Duration(seconds: 1), () {
+      isWarningVisible.value = false;
+    });
   }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  void increment() => count.value++;
 }
