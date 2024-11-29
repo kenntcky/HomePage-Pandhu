@@ -105,73 +105,79 @@ Future<double> calculateDistance(double gempaLat, double gempaLon) async {
 
 void readData() async {
   DatabaseReference ref = FirebaseDatabase.instance.ref();
+  final prefs = await SharedPreferences.getInstance();
+  String? lastProcessedKey = prefs.getString('lastProcessedKey');
 
   ref.orderByKey().limitToLast(10).onValue.listen((DatabaseEvent event) async {
     final data = event.snapshot.value;
     if (data != null) {
       Map<String, dynamic> dataMap = Map<String, dynamic>.from(data as Map);
-      final prefs = await SharedPreferences.getInstance();
-
-      for (String key in dataMap.keys) {
-        Map<String, dynamic> earthquakeData = Map<String, dynamic>.from(dataMap[key]['Infogempa']['gempa']);
-        
-        // Check if this data already exists in SQLite based on unique identifier
-        bool exists = await _checkIfDataExists(
-          tanggal: earthquakeData["Tanggal"], 
-          jam: earthquakeData["Jam"]
-        );
-
-        // If it doesn't exist, insert it into SQLite
-        if (!exists) {
-          String coordinatesBMKG = earthquakeData['Coordinates'];
-
-          // Convert string coordinates dari BMKG API ke array
-          List<String> parts = coordinatesBMKG.split(',');
-          var gempaCoordinatesx = List<double>.filled(2, 0);
-
-          if (parts.length == 2) {
-            gempaCoordinatesx[0] = double.parse(parts[0].trim());
-            gempaCoordinatesx[1] = double.parse(parts[1].trim());
-          }
-
-          double jarak = await calculateDistance(gempaCoordinatesx[0], gempaCoordinatesx[1]);
+      
+      // Get the latest key
+      String latestKey = dataMap.keys.last;
+      
+      // Only process if this is a new earthquake (different key)
+      if (lastProcessedKey != latestKey) {
+        for (String key in dataMap.keys) {
+          Map<String, dynamic> earthquakeData = Map<String, dynamic>.from(dataMap[key]['Infogempa']['gempa']);
           
-          if (jarak < 1000) {
-            await _saveToLocalDatabaseNearest(
-            tanggal: earthquakeData["Tanggal"],
-            jam: earthquakeData["Jam"],
-            coordinates: earthquakeData["Coordinates"],
-            lintang: earthquakeData["Lintang"],
-            bujur: earthquakeData["Bujur"],
-            magnitude: earthquakeData["Magnitude"],
-            kedalaman: earthquakeData["Kedalaman"],
-            wilayah: earthquakeData["Wilayah"],
-            potensi: earthquakeData["Potensi"],
-            dirasakan: earthquakeData["Dirasakan"],
-            shakemap: await downloadImageAsBytes(earthquakeData["shakemapUrl"]),
-            jarak: jarak
-            );
-          } else {
-            await _saveToLocalDatabase(
-            tanggal: earthquakeData["Tanggal"],
-            jam: earthquakeData["Jam"],
-            coordinates: earthquakeData["Coordinates"],
-            lintang: earthquakeData["Lintang"],
-            bujur: earthquakeData["Bujur"],
-            magnitude: earthquakeData["Magnitude"],
-            kedalaman: earthquakeData["Kedalaman"],
-            wilayah: earthquakeData["Wilayah"],
-            potensi: earthquakeData["Potensi"],
-            dirasakan: earthquakeData["Dirasakan"],
-            shakemap: await downloadImageAsBytes(earthquakeData["shakemapUrl"]),
-            jarak: jarak
+          bool exists = await _checkIfDataExists(
+            tanggal: earthquakeData["Tanggal"], 
+            jam: earthquakeData["Jam"]
           );
+
+          if (!exists) {
+            String coordinatesBMKG = earthquakeData['Coordinates'];
+            List<String> parts = coordinatesBMKG.split(',');
+            var gempaCoordinatesx = List<double>.filled(2, 0);
+
+            if (parts.length == 2) {
+              gempaCoordinatesx[0] = double.parse(parts[0].trim());
+              gempaCoordinatesx[1] = double.parse(parts[1].trim());
+            }
+
+            double jarak = await calculateDistance(gempaCoordinatesx[0], gempaCoordinatesx[1]);
+            
+            if (jarak < 1000) {
+              await _saveToLocalDatabaseNearest(
+              tanggal: earthquakeData["Tanggal"],
+              jam: earthquakeData["Jam"],
+              coordinates: earthquakeData["Coordinates"],
+              lintang: earthquakeData["Lintang"],
+              bujur: earthquakeData["Bujur"],
+              magnitude: earthquakeData["Magnitude"],
+              kedalaman: earthquakeData["Kedalaman"],
+              wilayah: earthquakeData["Wilayah"],
+              potensi: earthquakeData["Potensi"],
+              dirasakan: earthquakeData["Dirasakan"],
+              shakemap: await downloadImageAsBytes(earthquakeData["shakemapUrl"]),
+              jarak: jarak
+              );
+            } else {
+              await _saveToLocalDatabase(
+              tanggal: earthquakeData["Tanggal"],
+              jam: earthquakeData["Jam"],
+              coordinates: earthquakeData["Coordinates"],
+              lintang: earthquakeData["Lintang"],
+              bujur: earthquakeData["Bujur"],
+              magnitude: earthquakeData["Magnitude"],
+              kedalaman: earthquakeData["Kedalaman"],
+              wilayah: earthquakeData["Wilayah"],
+              potensi: earthquakeData["Potensi"],
+              dirasakan: earthquakeData["Dirasakan"],
+              shakemap: await downloadImageAsBytes(earthquakeData["shakemapUrl"]),
+              jarak: jarak
+            );
+            }
           }
         }
-      }
 
-      prefs.setBool('dbSet', true);
-      showNotification(Map<String, dynamic>.from(dataMap[dataMap.keys.last]['Infogempa']['gempa']));
+        // Only show notification for new data
+        showNotification(Map<String, dynamic>.from(dataMap[latestKey]['Infogempa']['gempa']));
+        
+        // Save the latest processed key
+        await prefs.setString('lastProcessedKey', latestKey);
+      }
     }
   });
 }
@@ -370,9 +376,17 @@ Future<void> _saveToLocalDatabaseNearest(
   print("Data saved to SQLite");
 }
 
-// Move this function outside of main
-Future<String> isLocationInitialized() async {
+// Update the isLocationInitialized function
+Future<String> determineInitialRoute() async {
   final prefs = await SharedPreferences.getInstance();
+  bool hasSeenOnboarding = prefs.getBool('hasSeenOnboarding') ?? false;
+  
+  // If user hasn't seen onboarding, show it first
+  if (!hasSeenOnboarding) {
+    return Routes.ONBOARDING;
+  }
+  
+  // Otherwise, check location initialization
   bool isLocationInitialized = prefs.getBool('locationInitialized') ?? false;
   if (isLocationInitialized) {
     return Routes.HOME;
@@ -387,10 +401,6 @@ void main() async {
   // Load .env file before anything else
   try {
     await dotenv.load();
-    print("Environment loaded successfully");
-    if (dotenv.env['GEMINI_API_KEY'] == null) {
-      print("Warning: GEMINI_API_KEY not found in environment");
-    }
   } catch (e) {
     print("Error loading environment: $e");
   }
@@ -440,7 +450,7 @@ void main() async {
       GetMaterialApp(
         debugShowCheckedModeBanner: false,
         title: "Application",
-        initialRoute: await isLocationInitialized(),
+        initialRoute: await determineInitialRoute(),
         getPages: AppPages.routes
       ),
     );

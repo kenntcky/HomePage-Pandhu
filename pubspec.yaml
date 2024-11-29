@@ -46,6 +46,7 @@
     flutter_markdown: ^0.6.18
     google_maps_flutter: ^2.10.0
     flutter_dotenv: ^5.2.1
+    groq: ^0.0.7
 
 
   # The following adds the Cupertino Icons font to your application.

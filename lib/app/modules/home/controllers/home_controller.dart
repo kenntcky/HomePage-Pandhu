@@ -1,9 +1,31 @@
 import 'package:get/get.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../database.dart';
 
 class HomeController extends GetxController {
-  //TODO: Implement HomeController
+  final RxList<Map<String, dynamic>> gempaList = <Map<String, dynamic>>[].obs;
+  final RxList<Map<String, dynamic>> gempaNearestList = <Map<String, dynamic>>[].obs;
+  final RxBool isLoading = true.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    loadData();
+  }
+
+  Future<void> loadData() async {
+    try {
+      isLoading.value = true;
+      final db = DatabaseHelper();
+      gempaList.value = await db.getAllGempa();
+      gempaNearestList.value = await db.getAllGempaNearest();
+    } catch (e) {
+      print('Error loading data: $e');
+    } finally {
+      isLoading.value = false;
+    }
+  }
 
   Future<String> getHumanReadable() async {
     try {
@@ -29,6 +51,17 @@ class HomeController extends GetxController {
     }
   }
 
-   
+  Future<void> refreshData() async {
+    try {
+      isLoading.value = true;
+      final db = DatabaseHelper();
+      gempaList.value = await db.getAllGempa();
+      gempaNearestList.value = await db.getAllGempaNearest();
+    } catch (e) {
+      print('Error refreshing data: $e');
+    } finally {
+      isLoading.value = false;
+    }
+  }
 
 }
