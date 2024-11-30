@@ -16,44 +16,61 @@ final String namabawah;
     required this.namabawah
     }) : super(key: key);
 
+  String _processText(String text) {
+    const String prefix = "Pusat gempa berada di ";
+    String processedText = text;
+    
+    // Remove prefix if exists
+    if (processedText.startsWith(prefix)) {
+      processedText = processedText.substring(prefix.length);
+    }
+    
+    // Trim whitespace and capitalize
+    processedText = processedText.trim();
+    if (processedText.isNotEmpty) {
+      processedText = processedText[0].toUpperCase() + processedText.substring(1);
+    }
+    
+    return processedText;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Row(
-                                      children: [
-                                          Container(
-                                            height: 24,
-                                            width: 24,
-                                            child: Image.asset(icongempa,
-                                            fit: BoxFit.fill,
-                                            )
-                                            ),
-                                          const SizedBox(
-                                            width: 8,
-                                          ),
-                                          Text(
-                                           satuangempa,
-                                           style: TextStyle(
-                                               color: Colors.black,
-                                               fontSize: 20,
-                                               fontFamily: 'Plus Jakarta Sans',
-                                           ),
-                                        )
-                                      ],
-                                    ),
-                                    Text(
-                                     namabawah,
-                                     style: TextStyle(
-                                     color: Color(0xFF666666),
-                                     fontSize: 12,
-                                     fontFamily: 'Plus Jakarta Sans',
-                                     fontWeight: FontWeight.w400,
-                                     ),
-                                     )
-                                  ],
-                                );
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.asset(
+          icongempa,
+          width: 24,
+          height: 24,
+        ),
+        const SizedBox(height: 4),
+        SizedBox(
+          width: 80,
+          child: Text(
+            _processText(satuangempa),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 12,
+              fontFamily: 'Plus Jakarta Sans',
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          namabawah,
+          style: const TextStyle(
+            color: Color(0xFF666666),
+            fontSize: 12,
+            fontFamily: 'Plus Jakarta Sans',
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+      ],
+    );
   }
 }

@@ -41,6 +41,14 @@ class SearchPageController extends GetxController {
               "wilayah": value['Infogempa']['gempa']["Wilayah"],
               "jarak": jarak,
               "jam": value['Infogempa']['gempa']["Jam"],
+              "tanggal": value['Infogempa']['gempa']["Tanggal"],
+              "coordinates": value['Infogempa']['gempa']["Coordinates"],
+              "lintang": value['Infogempa']['gempa']["Lintang"],
+              "bujur": value['Infogempa']['gempa']["Bujur"],
+              "kedalaman": value['Infogempa']['gempa']["Kedalaman"],
+              "potensi": value['Infogempa']['gempa']["Potensi"],
+              "dirasakan": value['Infogempa']['gempa']["Dirasakan"],
+              "shakemap": value['Infogempa']['gempa']["Shakemap"],
             });
           }
         });

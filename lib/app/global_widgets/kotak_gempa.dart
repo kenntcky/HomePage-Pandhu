@@ -7,6 +7,7 @@ import 'dart:math' show cos, sqrt, asin;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get/get.dart';
 import 'package:aplikasi_pandhu/app/routes/app_pages.dart';
+import 'dart:typed_data';
 
 Future<String> calculateDistance(double gempaLat, double gempaLon) async {
     final prefs = await SharedPreferences.getInstance();
@@ -53,19 +54,53 @@ class Kotakgempa extends StatelessWidget {
   final String lokasi;
   final String jarak;
   final String jam;
+  final String tanggal;
+  final String coordinates;
+  final String lintang;
+  final String bujur;
+  final String kedalaman;
+  final String potensi;
+  final String dirasakan;
+  final Uint8List? shakemap;
 
   const Kotakgempa({
     super.key,
     required this.magnitude,
     required this.lokasi,
     required this.jarak,
-    required this.jam});
+    required this.jam,
+    required this.tanggal,
+    required this.coordinates,
+    required this.lintang,
+    required this.bujur,
+    required this.kedalaman,
+    required this.potensi,
+    required this.dirasakan,
+    this.shakemap,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.toNamed(Routes.DETAIL_GEMPA);
+        print("Tapped on Kotak Gempa");
+        Get.toNamed(
+          Routes.DETAIL_GEMPA,
+          arguments: {
+            'magnitude': magnitude,
+            'lokasi': lokasi,
+            'jarak': jarak,
+            'jam': jam,
+            'tanggal': tanggal,
+            'coordinates': coordinates,
+            'lintang': lintang,
+            'bujur': bujur,
+            'kedalaman': kedalaman,
+            'potensi': potensi,
+            'dirasakan': dirasakan,
+            'shakemap': shakemap,
+          }
+        );
       },
       child: Stack(
         children: [

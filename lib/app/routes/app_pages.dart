@@ -95,7 +95,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.DETAIL_GEMPA,
-      page: () => const Googlemapflutter(),
+      page: () => Googlemapflutter(gempaData: Get.arguments),
       binding: DetailGempaBinding(),
     ),
   ];

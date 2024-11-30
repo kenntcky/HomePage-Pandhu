@@ -1,23 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:aplikasi_pandhu/app/routes/app_pages.dart';
+import '../../../../../database.dart';
 
-class alert_Gempa extends StatelessWidget {
-  const alert_Gempa({super.key});
+class AlertGempa extends StatelessWidget {
+  const AlertGempa({super.key});
+
+  Future<Widget> _getAlertWidget() async {
+    final List<Map<String, dynamic>> gempa = await DatabaseHelper().getAllGempa();
+    
+    if (gempa.isEmpty) return const SizedBox.shrink();
+    
+    final latestGempa = gempa.first;
+    final DateTime gempaTime = DateTime.parse(latestGempa['DateTime']);
+    final DateTime now = DateTime.now();
+    final difference = now.difference(gempaTime);
+    
+    // Only show alert for first 5 minutes
+    if (difference.inMinutes > 5) return const SizedBox.shrink();
+    
+    final double distance = double.tryParse(latestGempa['jarak'].toString().replaceAll(' km', '')) ?? 0;
+    
+    if (distance <= 25) {
+      return const RedAlert();
+    } else if (distance <= 50) {
+      return const YellowAlert();
+    } else {
+      return const GreenAlert();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Get.toNamed(Routes.WARNING);
+    return FutureBuilder<Widget>(
+      future: _getAlertWidget(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return GestureDetector(
+            onTap: () {
+              Get.toNamed(Routes.WARNING);
+            },
+            child: snapshot.data!
+          );
+        }
+        return const SizedBox.shrink();
       },
-      child: const green_Alert()
     );
   }
 }
 
-class red_Alert extends StatelessWidget {
-  const red_Alert({super.key});
+class RedAlert extends StatelessWidget {
+  const RedAlert({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -108,8 +141,8 @@ class red_Alert extends StatelessWidget {
   }
 }
 
-class yellow_Alert extends StatelessWidget {
-  const yellow_Alert({super.key});
+class YellowAlert extends StatelessWidget {
+  const YellowAlert({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -200,8 +233,8 @@ class yellow_Alert extends StatelessWidget {
   }
 }
 
-class green_Alert extends StatelessWidget {
-  const green_Alert({super.key});
+class GreenAlert extends StatelessWidget {
+  const GreenAlert({super.key});
 
   @override
   Widget build(BuildContext context) {

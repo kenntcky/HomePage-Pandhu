@@ -156,6 +156,13 @@ class SearchView extends GetView<SearchPageController> {
                         jam: gempa['jam'] != null 
                             ? gempa['jam'].substring(0, 5) + " WIB"
                             : '-',
+                        tanggal: gempa['tanggal'] ?? '-',
+                        coordinates: gempa['coordinates'] ?? '-',
+                        lintang: gempa['lintang'] ?? '-',
+                        bujur: gempa['bujur'] ?? '-',
+                        kedalaman: gempa['kedalaman'] ?? '-',
+                        potensi: gempa['potensi'] ?? '-',
+                        dirasakan: gempa['dirasakan'] ?? '-',
                       );
                     },
                   ),
