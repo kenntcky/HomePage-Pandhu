@@ -32,13 +32,15 @@ class TsunamiPotential extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         )
       ),
-      child: Text(
-        isTsunamiPotential ? 'Berpotensi tsunami' : 'Tidak berpotensi tsunami',
-        style: TextStyle(
-          color: isTsunamiPotential ? const Color(0xFFF6643C) : const Color(0xFF99D65C),
-          fontSize: 14,
-          fontFamily: 'Plus Jakarta Sans',
-          fontWeight: FontWeight.w600,
+      child: Center(
+        child: Text(
+          isTsunamiPotential ? 'Berpotensi tsunami' : 'Tidak berpotensi tsunami',
+          style: TextStyle(
+            color: isTsunamiPotential ? const Color(0xFFF6643C) : const Color(0xFF99D65C),
+            fontSize: 14,
+            fontFamily: 'Plus Jakarta Sans',
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
     );
