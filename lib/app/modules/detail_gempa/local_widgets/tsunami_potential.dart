@@ -11,7 +11,8 @@ class TsunamiPotential extends StatelessWidget {
   });
 
   bool _hasTsunamiPotential() {
-    return potensi.toLowerCase().contains('tsunami');
+    final String lowerPotensi = potensi.toLowerCase();
+    return lowerPotensi.contains('tsunami') && !lowerPotensi.contains('tidak');
   }
 
   @override
