@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:aplikasi_pandhu/app/modules/permission/controllers/permission_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';

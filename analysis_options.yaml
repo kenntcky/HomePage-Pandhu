@@ -1,3 +1,6 @@
+analyzer:
+  errors:
+    prefer_const_constructors: ignore ignore ignore ignore
 include: package:flutter_lints/flutter.yaml
 linter:
   rules:

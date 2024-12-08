@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:aplikasi_pandhu/app/modules/warning/local_widgets/panduan.dart';
 import 'package:flutter/material.dart';
 
