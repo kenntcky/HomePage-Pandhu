@@ -20,8 +20,8 @@ class RiwayatView extends GetView<RiwayatController> {
               padding: const EdgeInsets.fromLTRB(11, 39, 11, 16),
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -37,6 +37,27 @@ class RiwayatView extends GetView<RiwayatController> {
                       ],
                     ),
                   ),
+                  Obx(() => controller.isOnline.value 
+                    ? const SizedBox.shrink()
+                    : Container(
+                        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                        margin: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.orange.shade100,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Row(
+                          children: [
+                            Icon(Icons.wifi_off, color: Colors.orange),
+                            SizedBox(width: 8),
+                            Text(
+                              'Offline Mode - Showing local data',
+                              style: TextStyle(color: Colors.orange),
+                            ),
+                          ],
+                        ),
+                      )
+                  ),
                   Expanded(
                     child: Obx(() {
                       if (controller.isLoading.value) {
@@ -49,7 +70,7 @@ class RiwayatView extends GetView<RiwayatController> {
 
                       return GridView(
                         scrollDirection: Axis.vertical,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           mainAxisSpacing: 0,
                           crossAxisSpacing: 0,
@@ -71,8 +92,7 @@ class RiwayatView extends GetView<RiwayatController> {
                               bujur: gempa['bujur'] ?? '-',
                               kedalaman: gempa['kedalaman'] ?? '-',
                               potensi: gempa['potensi'] ?? '-',
-                              dirasakan: gempa['dirasakan'] ?? '-',
-                              shakemap: gempa['shakemap'],
+                              dirasakan: gempa['dirasakan'] ?? '-'
                             ),
                           );
                         }).toList(),
