@@ -17,7 +17,7 @@ class SearchView extends GetView<SearchPageController> {
       body: Column(
         children: [
           AppBar(
-                backgroundColor: Colors.transparent,
+                backgroundColor: Color(0xFFF7F7F7),
                 title: Column(
                   children: [
                     Row(

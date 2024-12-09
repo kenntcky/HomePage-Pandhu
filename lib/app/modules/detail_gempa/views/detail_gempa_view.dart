@@ -95,7 +95,7 @@ class _GooglemapflutterState extends State<Googlemapflutter> {
             ),
           ),
           DraggableScrollableSheet(
-            initialChildSize: 0.57,
+            initialChildSize: 0.32,
             minChildSize: 0.32,
             maxChildSize: 0.57,
             builder: (context, scrollController) {
@@ -253,7 +253,7 @@ class _GooglemapflutterState extends State<Googlemapflutter> {
                                 ),
                               ),
                               Image.asset(
-                                "asset/img/icon/arrow-right.png",
+                                "asset/img/icon/arrow-right-white.png",
                                 width: 24,
                                 height: 24,
                                 fit: BoxFit.fill,

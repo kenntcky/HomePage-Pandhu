@@ -22,89 +22,93 @@ class HomeView extends GetView<HomeController> {
           ListView(
             children: [
               // App Bar Section
-              Container(
-                height: 78,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Image.asset(
-                            "asset/img/icon/location.png",
-                            width: 40,
-                            height: 40,
-                          ),
-                          const SizedBox(width: 8),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Lokasi Anda',
-                                style: TextStyle(
-                                  color: Color(0xFF666666),
-                                  fontSize: 12,
-                                  fontFamily: 'Plus Jakarta Sans',
-                                  fontWeight: FontWeight.w400,
+              GestureDetector(
+                onTap: () {
+                  Get.toNamed(Routes.GANTILOK_EDITLOK);
+                },
+                child: Container(
+                  height: 78,
+                  decoration: const BoxDecoration(
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Image.asset(
+                              "asset/img/icon/location.png",
+                              width: 40,
+                              height: 40,
+                            ),
+                            const SizedBox(width: 8),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Lokasi Anda',
+                                  style: TextStyle(
+                                    color: Color(0xFF666666),
+                                    fontSize: 12,
+                                    fontFamily: 'Plus Jakarta Sans',
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
-                              ),
-                              FutureBuilder<List<Placemark>>(
-                                future: PermissionController().getPlacemarksFromPrefs(),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState == ConnectionState.waiting) {
-                                    return const Text(
-                                      'Memuat lokasi...',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 14,
-                                        fontFamily: 'Plus Jakarta Sans',
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    );
-                                  } else if (snapshot.hasError) {
-                                    return const Text(
-                                      'Gagal memuat lokasi.',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 14,
-                                        fontFamily: 'Plus Jakarta Sans',
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    );
-                                  } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                                    final placemark = snapshot.data![0];
-                                    return Text(
-                                      '${placemark.subAdministrativeArea}, ${placemark.administrativeArea}',
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 14,
-                                        fontFamily: 'Plus Jakarta Sans',
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    );
-                                  } else {
-                                    return const Text(
-                                      'Lokasi tidak ditemukan.',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 14,
-                                        fontFamily: 'Plus Jakarta Sans',
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    );
-                                  }
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
+                                FutureBuilder<List<Placemark>>(
+                                  future: PermissionController().getPlacemarksFromPrefs(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState == ConnectionState.waiting) {
+                                      return const Text(
+                                        'Memuat lokasi...',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 14,
+                                          fontFamily: 'Plus Jakarta Sans',
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      );
+                                    } else if (snapshot.hasError) {
+                                      return const Text(
+                                        'Gagal memuat lokasi.',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 14,
+                                          fontFamily: 'Plus Jakarta Sans',
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      );
+                                    } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                                      final placemark = snapshot.data![0];
+                                      return Text(
+                                        '${placemark.subAdministrativeArea}, ${placemark.administrativeArea}',
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 14,
+                                          fontFamily: 'Plus Jakarta Sans',
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      );
+                                    } else {
+                                      return const Text(
+                                        'Lokasi tidak ditemukan.',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 14,
+                                          fontFamily: 'Plus Jakarta Sans',
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -369,7 +373,7 @@ class HomeView extends GetView<HomeController> {
                               SizedBox(
                                 width: 210,
                                 child: Text(
-                                  'Hubungi BMKG atau BPBD kota Anda untuk mendapatkan bantuan dan informasi yang lebih terperinci',
+                                  'Hubungi BMKG atau BPBD kota Anda untuk mendapatkan informasi terperinci',
                                   style: TextStyle(
                                     color: Color(0xFFB9E3FF),
                                     fontSize: 14,
