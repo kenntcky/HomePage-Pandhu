@@ -49,6 +49,8 @@
     groq: ^0.0.7
     flutter_map: ^7.0.2
     latlong2: ^0.9.1
+    connectivity_plus: ^6.1.0
+    internet_connection_checker: ^1.0.0+1
 
 
   # The following adds the Cupertino Icons font to your application.

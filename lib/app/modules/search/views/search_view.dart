@@ -13,7 +13,7 @@ class SearchView extends GetView<SearchPageController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF7F7F7),
+      backgroundColor: const Color(0xFFF7F7F7),
       body: Column(
         children: [
           AppBar(
@@ -22,17 +22,17 @@ class SearchView extends GetView<SearchPageController> {
                   children: [
                     Row(
                       children: [
-                        Image(
+                        const Image(
                           image: AssetImage("asset/img/icon/location.png"),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 8,
                         ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
+                            const Text(
                               "Lokasi Anda,",
                               style: TextStyle(
                                 color: Color(0xFF666666),
@@ -41,14 +41,14 @@ class SearchView extends GetView<SearchPageController> {
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 4,
                             ),
                             FutureBuilder<List<Placemark>>(
                               future: PermissionController().getPlacemarksFromPrefs(),
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState == ConnectionState.waiting) {
-                                  return Text(
+                                  return const Text(
                                     'Memuat lokasi...',
                                     style: TextStyle(
                                       color: Colors.black,
@@ -58,7 +58,7 @@ class SearchView extends GetView<SearchPageController> {
                                     ),
                                   );
                                 } else if (snapshot.hasError) {
-                                  return Text(
+                                  return const Text(
                                     'Gagal memuat lokasi.',
                                     style: TextStyle(
                                       color: Colors.black,
@@ -71,7 +71,7 @@ class SearchView extends GetView<SearchPageController> {
                                   final placemark = snapshot.data![0];
                                   return Text(
                                     '${placemark.subAdministrativeArea}, ${placemark.administrativeArea}',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.black,
                                       fontSize: 14,
                                       fontFamily: 'Plus Jakarta Sans',
@@ -79,7 +79,7 @@ class SearchView extends GetView<SearchPageController> {
                                     ),
                                   );
                                 } else {
-                                  return Text(
+                                  return const Text(
                                     'Lokasi tidak ditemukan.',
                                     style: TextStyle(
                                       color: Colors.black,
@@ -99,14 +99,14 @@ class SearchView extends GetView<SearchPageController> {
                 ),
               ),
           Padding(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             child: Column(
               children: [
                 TextField(
                   autofocus: true,
                   onSubmitted: (input) => controller.searchEarthquakeData(input),
                   decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.search),
+                    prefixIcon: const Icon(Icons.search),
                     hintText: "Cari informasi gempa",
                     fillColor: Colors.white,
                     filled: true,
@@ -116,8 +116,8 @@ class SearchView extends GetView<SearchPageController> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
-                Row(
+                const SizedBox(height: 20),
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
@@ -130,19 +130,19 @@ class SearchView extends GetView<SearchPageController> {
                     ),
                   ],
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
               ],
             ),
           ),
           Expanded(
             child: Obx(() {
               if (controller.searchResults.isEmpty) {
-                return Center(child: Text('Tidak ada data'));
+                return const Center(child: Text('Tidak ada data'));
               } else {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 10,
