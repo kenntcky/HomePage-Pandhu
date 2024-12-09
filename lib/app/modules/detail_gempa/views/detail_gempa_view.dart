@@ -1,3 +1,4 @@
+import 'package:aplikasi_pandhu/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -231,7 +232,7 @@ class _GooglemapflutterState extends State<Googlemapflutter> {
                       ),
                       child: GestureDetector(
                         onTap: () {
-                          // Add your action here
+                          Get.toNamed(Routes.ARTIKEL);
                         },
                         child: Container(
                           height: 40,

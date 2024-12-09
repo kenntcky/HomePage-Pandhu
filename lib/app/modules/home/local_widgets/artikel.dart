@@ -1,110 +1,118 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:aplikasi_pandhu/app/routes/app_pages.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'package:get/get.dart';
 
 class Artikel extends StatelessWidget {
   const Artikel({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 288,
-      width: 202,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(6),
-        child: Column(
-          children: [
-            ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: Image.asset("asset/img/image/artikel.png")),
-            SizedBox(
-              height: 8,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Pandhu',
-                  style: TextStyle(
-                    color: Color(0xFFF6643C),
-                    fontSize: 10,
-                    fontFamily: 'Plus Jakarta Sans',
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                Text(
-                  '10 Sep 2024',
-                  style: TextStyle(
-                    color: Color(0xFF636363),
-                    fontSize: 10,
-                    fontFamily: 'Plus Jakarta Sans',
-                    fontWeight: FontWeight.w600,
-                  ),
-                )
-              ],
-            ),
-            Expanded(
-              child: Column(
+    return GestureDetector(
+      onTap: () {
+        Get.toNamed(Routes.ARTIKEL);
+      },
+      child: Container(
+        height: 288,
+        width: 202,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(6),
+          child: Column(
+            children: [
+              ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: Image.asset("asset/img/image/artikel.png")),
+              SizedBox(
+                height: 8,
+              ),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                    'Bagaimana\nCara Evakuasi Diri',
+                  Text(
+                    'Pandhu',
                     style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
+                      color: Color(0xFFF6643C),
+                      fontSize: 10,
                       fontFamily: 'Plus Jakarta Sans',
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   Text(
-                    'Indonesia adalah salah satu bagian yang termasuk dalam Rings of Fire (ROF). Namun naasnya, banyak sekali warga yang',
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
+                    '10 Sep 2024',
                     style: TextStyle(
                       color: Color(0xFF636363),
                       fontSize: 10,
                       fontFamily: 'Plus Jakarta Sans',
-                      fontWeight: FontWeight.w400,
+                      fontWeight: FontWeight.w600,
                     ),
-                  ),
-                  ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 43,
-                        height: 15,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Baca',
-                              style: TextStyle(
-                                color: Color(0xFF3BABF6),
-                                fontSize: 10,
-                                fontFamily: 'Plus Jakarta Sans',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            Image.asset("asset/img/icon/arrow-right.png"),
-                          ],
-                        ),
-                      ),
-                    ],
                   )
                 ],
               ),
-            ),
-          ],
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                      'Mengenal Bahaya Gempa Bumi',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontFamily: 'Plus Jakarta Sans',
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Text(
+                      'Gempa bumi adalah getaran atau guncangan yang terjadi di permukaan bumi akibat pelepasan energi secara tiba-tiba di dalam lapisan bumi. Energi ini berasal dari pergerakan lempeng tektonik, aktivitas vulkanik, atau bahkan ledakan buatan. Getaran gempa dapat dirasakan oleh manusia, dan sering kali membawa dampak besar terhadap kehidupan, termasuk kerusakan bangunan, kehilangan nyawa, dan gangguan sosial.',
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Color(0xFF636363),
+                        fontSize: 10,
+                        fontFamily: 'Plus Jakarta Sans',
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 43,
+                          height: 15,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Baca',
+                                style: TextStyle(
+                                  color: Color(0xFF3BABF6),
+                                  fontSize: 10,
+                                  fontFamily: 'Plus Jakarta Sans',
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Image.asset("asset/img/icon/arrow-right.png"),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

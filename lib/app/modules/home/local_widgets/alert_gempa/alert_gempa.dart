@@ -56,90 +56,95 @@ class RedAlert extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Container(
-                    width: 382,
-                    height: 201,
-                    decoration: ShapeDecoration(
-                      color: Color(0xFFF6643C),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+    return GestureDetector(
+      onTap: () {
+        Get.toNamed(Routes.WARNING);
+      },
+      child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Container(
+                      width: 382,
+                      height: 201,
+                      decoration: ShapeDecoration(
+                        color: Color(0xFFF6643C),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        shadows: const [
+                          BoxShadow(
+                            color: Color(0x99F6643C),
+                            blurRadius: 20,
+                            offset: Offset(0, 4),
+                            spreadRadius: 0,
+                          )
+                        ],
                       ),
-                      shadows: const [
-                        BoxShadow(
-                          color: Color(0x99F6643C),
-                          blurRadius: 20,
-                          offset: Offset(0, 4),
-                          spreadRadius: 0,
-                        )
-                      ],
-                    ),
-                    child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Column(
-                              children: [
-                                Text(
-                                'Gempa Sedang Terjadi',
-                                style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontFamily: 'Plus Jakarta Sans',
-                                fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 17,
-                                ),
-                                Container(
-                                  width: 210,
-                                  child: Text(
-                                    'Hati-hati gempa sedang terjadi di wilayah Kota Semarang.',
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      color: Color(0xFFFBC1B1),
-                                      fontSize: 14,
-                                      fontFamily: 'Plus Jakarta Sans',
-                                      fontWeight: FontWeight.w400,
+                      child: Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                          child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Column(
+                                children: [
+                                  Text(
+                                  'Gempa Sedang Terjadi',
+                                  style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontFamily: 'Plus Jakarta Sans',
+                                  fontWeight: FontWeight.w600,
                                     ),
                                   ),
+                                  SizedBox(
+                                    height: 17,
+                                  ),
+                                  Container(
+                                    width: 210,
+                                    child: Text(
+                                      'Hati-hati gempa sedang terjadi di wilayah Kota Semarang.',
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        color: Color(0xFFFBC1B1),
+                                        fontSize: 14,
+                                        fontFamily: 'Plus Jakarta Sans',
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                'Selengkapnya',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontFamily: 'Plus Jakarta Sans',
+                                  fontWeight: FontWeight.w600,
                                 ),
-                              ],
-                            ),
-                            Text(
-                              'Selengkapnya',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
-                                fontFamily: 'Plus Jakarta Sans',
-                                fontWeight: FontWeight.w600,
+                              ),
+                            ],
+                          ),
+                          Flexible(
+                            child: AspectRatio(
+                              aspectRatio: 1, // This maintains a square aspect ratio for the image
+                              child: Image.asset(
+                                "asset/img/image/gempa.png",
+                                fit: BoxFit.contain, // Preserves image proportions and scales to fit
                               ),
                             ),
-                          ],
-                        ),
-                        Flexible(
-                          child: AspectRatio(
-                            aspectRatio: 1, // This maintains a square aspect ratio for the image
-                            child: Image.asset(
-                              "asset/img/image/gempa.png",
-                              fit: BoxFit.contain, // Preserves image proportions and scales to fit
-                            ),
                           ),
-                        ),
-                      ],
-                    )
+                        ],
+                      )
+                      ),
                     ),
                   ),
-                );
+    );
   }
 }
 
