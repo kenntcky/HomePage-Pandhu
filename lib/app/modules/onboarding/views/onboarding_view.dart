@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -10,123 +12,137 @@ class OnboardingView extends GetView<OnboardingController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Image.asset(
-              "asset/img/logo/logo-pandu.png",
-              width: 14.88,
-              height: 24,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Text(
-                'Pandhu',
-                style: TextStyle(
-                  color: Color(0xFFF6643C),
-                  fontSize: 16,
-                  fontFamily: 'Plus Jakarta Sans',
-                  fontWeight: FontWeight.w700,
-                ),
+        title: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Image.asset(
+                "asset/img/logo/logo-pandu.png",
+                width: 14.88,
+                height: 24,
               ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Text(
+                  'Pandhu',
+                  style: TextStyle(
+                    color: Color(0xFFF6643C),
+                    fontSize: 16,
+                    fontFamily: 'Plus Jakarta Sans',
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              width: 294,
+              height: 196,
+              child: Image(image: AssetImage("asset/img/image/people.png")),
+            ),
+            Column(
+              children: [
+                Text(
+                  'Siaga Gempa,\nLindungi Masa Bersama',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 24,
+                    fontFamily: 'Plus Jakarta Sans',
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                SizedBox(
+                  height: 12,
+                ),
+                Text(
+                  'Pandhu memberi Anda peringatan dini gempa untuk memastikan keselamatan Anda dan keluarga. ',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color(0xFF666666),
+                    fontSize: 16,
+                    fontFamily: 'Plus Jakarta Sans',
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ],
+            ),
+            // SizedBox(
+            //   height: 130,
+            // ),
+            Column(
+              children: [
+                GestureDetector(
+                  onTap: () => controller.completeOnboarding(),
+                  child: Container(
+                    width: 382,
+                    height: 52,
+                    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                    decoration: ShapeDecoration(
+                        color: Color(0xFFF6643C),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        )),
+                    child: Text(
+                      'Lanjutkan',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontFamily: 'Plus Jakarta Sans',
+                        fontWeight: FontWeight.w600,
+                        height: 0,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                SizedBox(
+                  width: 382,
+                  child: const Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Dengan melanjutkan, Anda setuju dengan \n',
+                          style: TextStyle(
+                            color: Color(0xFF666666),
+                            fontSize: 16,
+                            fontFamily: 'Plus Jakarta Sans',
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        TextSpan(
+                          text: 'Kebijikan privasi  ',
+                          style: TextStyle(color: Colors.orange),
+                        ),
+                        TextSpan(
+                            text: '& ',
+                            style: TextStyle(
+                              color: Color(0xFF666666),
+                            )),
+                        TextSpan(
+                            text: 'Syarat ketentuan',
+                            style: TextStyle(color: Colors.orange))
+                      ],
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              ],
             )
           ],
         ),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            width: 294,
-            height: 196,
-            child: Image(image: AssetImage("asset/img/image/people.png")),
-          ),
-          Text(
-            'Siaga Gempa,\nLindungi Masa Bersama',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 24,
-              fontFamily: 'Plus Jakarta Sans',
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          SizedBox(
-            height: 12,
-          ),
-          Text(
-            'Pandhu memberi Anda peringatan dini gempa untuk memastikan keselamatan Anda dan keluarga. ',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Color(0xFF666666),
-              fontSize: 16,
-              fontFamily: 'Plus Jakarta Sans',
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-          SizedBox(
-            height: 130,
-          ),
-          GestureDetector(
-            onTap: () => controller.completeOnboarding(),
-            child: Container(
-              width: 382,
-              height: 52,
-              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
-              decoration: ShapeDecoration(
-                  color: Color(0xFFF6643C),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  )),
-              child: Text(
-                'Lanjutkan',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontFamily: 'Plus Jakarta Sans',
-                  fontWeight: FontWeight.w600,
-                  height: 0,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 16,
-          ),
-          Container(
-            width: 382,
-            child: const Text.rich(
-              TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Dengan melanjutkan, Anda setuju dengan \n',
-                    style: TextStyle(
-                      color: Color(0xFF666666),
-                      fontSize: 16,
-                      fontFamily: 'Plus Jakarta Sans',
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  TextSpan(
-                    text: 'Kebijikan privasi  ',
-                    style: TextStyle(color: Colors.orange),
-                  ),
-                  TextSpan(
-                      text: '& ',
-                      style: TextStyle(
-                        color: Color(0xFF666666),
-                      )),
-                  TextSpan(
-                      text: 'Syarat ketentuan',
-                      style: TextStyle(color: Colors.orange))
-                ],
-              ),
-              textAlign: TextAlign.center,
-            ),
-          )
-        ],
       ),
     );
   }

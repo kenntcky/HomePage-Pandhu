@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:aplikasi_pandhu/app/global_widgets/kotak_gempa.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,7 +17,7 @@ class SearchView extends GetView<SearchPageController> {
       body: Column(
         children: [
           AppBar(
-                backgroundColor: Colors.transparent,
+                backgroundColor: Color(0xFFF7F7F7),
                 title: Column(
                   children: [
                     Row(
