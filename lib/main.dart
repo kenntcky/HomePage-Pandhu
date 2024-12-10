@@ -345,7 +345,7 @@ Future<void> _saveToLocalDatabaseNearest(
   Database db = await _openDatabase();
 
   // Check the number of existing entries
-  List<Map<String, dynamic>> existingData = await db.query('dataGempa');
+  List<Map<String, dynamic>> existingData = await db.query('dataGempaTerdekat');
 
   // If there are 10 or more entries, delete the oldest
   if (existingData.length >= 10) {

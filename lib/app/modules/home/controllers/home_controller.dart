@@ -4,8 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_database/firebase_database.dart';
 import '../../../../database.dart';
 import '../../../../utils/connectivity_utils.dart';
+import 'dart:async';
 import '../../../../main.dart';
-import 'dart:math' show min;
 
 class HomeController extends GetxController {
   final RxList<Map<String, dynamic>> gempaList = <Map<String, dynamic>>[].obs;
@@ -15,10 +15,28 @@ class HomeController extends GetxController {
   final DatabaseReference _databaseRef = FirebaseDatabase.instance.ref();
   final dbHelper = DatabaseHelper();
 
+  // Add observable for latest earthquake
+  final Rx<Map<String, dynamic>> latestEarthquake = Rx<Map<String, dynamic>>({});
+  
+  // Add timer for periodic checks
+  Timer? _timer;
+
   @override
   void onInit() {
     super.onInit();
+    // Initial check
+    checkLatestEarthquake();
+    // Set up periodic check every 5 seconds
+    _timer = Timer.periodic(const Duration(seconds: 5), (_) {
+      checkLatestEarthquake();
+    });
     loadData();
+  }
+
+  @override
+  void onClose() {
+    _timer?.cancel();
+    super.onClose();
   }
 
   Future<void> loadData() async {
@@ -46,101 +64,124 @@ class HomeController extends GetxController {
 
   Future<void> _loadFromFirebase() async {
     try {
-      print('Home: Fetching data from Firebase');
-      final event = await _databaseRef.once();
+      print('Home: Starting Firebase data fetch');
+      // For regular list, keep limit to 25
+      final event = await _databaseRef.orderByKey().limitToLast(25).once();
       final snapshot = event.snapshot;
 
       if (snapshot.value != null) {
         final data = Map<String, dynamic>.from(snapshot.value as Map);
+        print('Home: Retrieved ${data.length} records from Firebase');
         List<Map<String, dynamic>> earthquakes = [];
-        List<Map<String, dynamic>> nearestEarthquakes = [];
 
-        print('Home: Processing ${data.length} records from Firebase');
-
-        // Convert the entries to a List so we can use await properly
-        final entries = data.entries.toList();
-        for (var entry in entries) {
-          final value = entry.value;
-          if (value['Infogempa'] != null && 
-              value['Infogempa']['gempa'] != null && 
-              value['Infogempa']['gempa']['Coordinates'] != null) {
-                
-            final dateTime = value['Infogempa']['gempa']["DateTime"];
-            print('Home: Processing earthquake with DateTime: $dateTime');
-                
-            // Convert coordinates string to array
-            List<String> parts = value['Infogempa']['gempa']['Coordinates'].split(',');
-            var gempaCoordinates = List<double>.filled(2, 0);
-
-            if (parts.length == 2) {
-              gempaCoordinates[0] = double.parse(parts[0].trim());
-              gempaCoordinates[1] = double.parse(parts[1].trim());
-            }
-
-            final jarak = await calculateDistance(gempaCoordinates[0], gempaCoordinates[1]);
-            
-            final earthquakeData = {
-              "magnitude": value['Infogempa']['gempa']["Magnitude"] ?? 'Tidak ada data',
-              "wilayah": value['Infogempa']['gempa']["Wilayah"] ?? 'Tidak ada data',
-              "jarak": jarak,
-              "jam": value['Infogempa']['gempa']["Jam"] ?? 'Tidak ada data',
-              "tanggal": value['Infogempa']['gempa']["Tanggal"] ?? 'Tidak ada data',
-              "coordinates": value['Infogempa']['gempa']["Coordinates"] ?? 'Tidak ada data',
-              "lintang": value['Infogempa']['gempa']["Lintang"] ?? 'Tidak ada data',
-              "bujur": value['Infogempa']['gempa']["Bujur"] ?? 'Tidak ada data',
-              "kedalaman": value['Infogempa']['gempa']["Kedalaman"] ?? 'Tidak ada data',
-              "potensi": value['Infogempa']['gempa']["Potensi"] ?? 'Tidak ada data',
-              "dirasakan": value['Infogempa']['gempa']["Dirasakan"] ?? 'Tidak ada data',
-              "shakemap": value['Infogempa']['gempa']["Shakemap"],
-              "dateTime": dateTime ?? '',
-            };
-
+        for (var entry in data.entries.toList()) {
+          final earthquakeData = await _processEarthquakeData(entry);
+          if (earthquakeData != null) {
             earthquakes.add(earthquakeData);
-            
-            // Add to nearest earthquakes if distance is less than 500km
-            if (jarak < 500) {
-              nearestEarthquakes.add(earthquakeData);
-            }
           }
         }
 
-        print('Home: Before sorting - First earthquake DateTime: ${earthquakes.isNotEmpty ? earthquakes.first['dateTime'] : 'no data'}');
-        
-        // Sort earthquakes by DateTime (newest first)
+        // Sort by DateTime
         earthquakes.sort((a, b) {
           final aDateTime = DateTime.parse(a['dateTime']);
           final bDateTime = DateTime.parse(b['dateTime']);
           return bDateTime.compareTo(aDateTime);
         });
 
-        print('Home: After sorting - First earthquake DateTime: ${earthquakes.isNotEmpty ? earthquakes.first['dateTime'] : 'no data'}');
-
-        // Sort nearest earthquakes by DateTime (newest first)
-        nearestEarthquakes.sort((a, b) {
-          final aDateTime = DateTime.parse(a['dateTime']);
-          final bDateTime = DateTime.parse(b['dateTime']);
-          return bDateTime.compareTo(aDateTime);
-        });
-
-        // Take only the latest 25 earthquakes for the main list
-        earthquakes = earthquakes.take(25).toList();
-
-        // Print the first few sorted earthquakes
-        print('Home: First 3 earthquakes after sorting:');
-        for (var i = 0; i < min(3, earthquakes.length); i++) {
-          print('Home: ${i + 1}. DateTime: ${earthquakes[i]['dateTime']}, Tanggal: ${earthquakes[i]['tanggal']}, Jam: ${earthquakes[i]['jam']}');
-        }
-
+        // Sync first 10 earthquakes to SQLite
+        await dbHelper.syncFromFirebase(earthquakes.take(10).toList());
         gempaList.value = earthquakes;
-        gempaNearestList.value = nearestEarthquakes;
-        print('Home: Successfully loaded ${earthquakes.length} records from Firebase');
-        print('Home: Found ${nearestEarthquakes.length} nearby earthquakes (under 500km)');
+        
+        // Load nearest earthquakes separately
+        await _loadNearestEarthquakes();
       }
     } catch (e) {
       print('Home: Error fetching from Firebase: $e');
-      print('Home: Stack trace: $e');
       throw e;
     }
+  }
+
+  Future<void> _loadNearestEarthquakes() async {
+    try {
+      print('Home: Starting nearest earthquakes fetch');
+      // Get all earthquakes without limit
+      final event = await _databaseRef.orderByKey().once();
+      final snapshot = event.snapshot;
+
+      if (snapshot.value != null) {
+        final data = Map<String, dynamic>.from(snapshot.value as Map);
+        List<Map<String, dynamic>> allEarthquakes = [];
+
+        for (var entry in data.entries.toList()) {
+          final earthquakeData = await _processEarthquakeData(entry);
+          if (earthquakeData != null) {
+            allEarthquakes.add(earthquakeData);
+          }
+        }
+
+        // Sort by distance
+        allEarthquakes.sort((a, b) {
+          final distanceA = double.tryParse(a['jarak'].toString()) ?? double.infinity;
+          final distanceB = double.tryParse(b['jarak'].toString()) ?? double.infinity;
+          return distanceA.compareTo(distanceB);
+        });
+
+        // Get only earthquakes within 100km
+        List<Map<String, dynamic>> nearestQuakes = allEarthquakes
+            .where((quake) => (double.tryParse(quake['jarak'].toString()) ?? double.infinity) < 100)
+            .toList();
+
+        // Take only the first 10 and sort by datetime
+        nearestQuakes = nearestQuakes.take(10).toList()
+          ..sort((a, b) {
+            final aDateTime = DateTime.parse(a['dateTime']);
+            final bDateTime = DateTime.parse(b['dateTime']);
+            return bDateTime.compareTo(aDateTime);
+          });
+
+        gempaNearestList.value = nearestQuakes;
+        print('Home: Found ${nearestQuakes.length} nearby earthquakes in Firebase data');
+      }
+    } catch (e) {
+      print('Home: Error fetching nearest earthquakes: $e');
+      throw e;
+    }
+  }
+
+  // Helper method to process earthquake data
+  Future<Map<String, dynamic>?> _processEarthquakeData(MapEntry entry) async {
+    try {
+      final value = entry.value;
+      if (value['Infogempa']?['gempa']?['Coordinates'] != null) {
+        final gempaData = value['Infogempa']['gempa'];
+        List<String> parts = gempaData['Coordinates'].split(',');
+        var gempaCoordinates = List<double>.filled(2, 0);
+
+        if (parts.length == 2) {
+          gempaCoordinates[0] = double.parse(parts[0].trim());
+          gempaCoordinates[1] = double.parse(parts[1].trim());
+        }
+
+        final jarak = await calculateDistance(gempaCoordinates[0], gempaCoordinates[1]);
+        return {
+          'tanggal': gempaData['Tanggal'],
+          'jam': gempaData['Jam'],
+          'coordinates': gempaData['Coordinates'],
+          'jarak': jarak,
+          'magnitude': gempaData['Magnitude'],
+          'kedalaman': gempaData['Kedalaman'],
+          'wilayah': gempaData['Wilayah'],
+          'potensi': gempaData['Potensi'],
+          'dirasakan': gempaData['Dirasakan'],
+          'shakemap': gempaData['Shakemap'],
+          'dateTime': gempaData['DateTime'],
+          'notificationTime': gempaData['notificationTime'] ?? DateTime.now().toIso8601String(),
+        };
+      }
+    } catch (e) {
+      print('Home: Error processing earthquake data: $e');
+    }
+    return null;
   }
 
   Future<void> _loadFromSQLite() async {
@@ -184,6 +225,35 @@ class HomeController extends GetxController {
     } catch (e) {
       print("Home: Error in getHumanReadable(): $e");
       return "Gagal mengambil lokasi.";
+    }
+  }
+
+  Future<void> checkLatestEarthquake() async {
+    print('Checking latest earthquake from Firebase...');
+    try {
+      final event = await _databaseRef.orderByKey().limitToLast(1).once();
+      final snapshot = event.snapshot;
+
+      if (snapshot.value != null) {
+        final data = Map<String, dynamic>.from(snapshot.value as Map);
+        final entry = data.entries.first;
+        
+        if (entry.value['Infogempa']?['gempa']?['Coordinates'] != null) {
+          final earthquakeData = await _processEarthquakeData(entry);
+          if (earthquakeData != null) {
+            print('Latest earthquake data from Firebase: $earthquakeData');
+            latestEarthquake.value = earthquakeData;
+          }
+        }
+      }
+    } catch (e) {
+      print('Error checking latest earthquake: $e');
+      // Fallback to SQLite if Firebase fails
+      final dbHelper = DatabaseHelper();
+      final latest = await dbHelper.getLatestGempa();
+      if (latest.isNotEmpty) {
+        latestEarthquake.value = latest.first;
+      }
     }
   }
 }

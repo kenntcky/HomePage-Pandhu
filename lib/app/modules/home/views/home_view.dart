@@ -166,6 +166,12 @@ class HomeView extends GetView<HomeController> {
                   ),
                   
                   const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () async {
+                        controller.refreshData();
+                      },
+                      child: Text('Simulate Earthquake Alert'),
+                    ),
                   const AlertGempa(),
                   const SizedBox(height: 20),
             
@@ -231,7 +237,7 @@ class HomeView extends GetView<HomeController> {
                                   child: Kotakgempa(
                                     magnitude: gempa['magnitude'] ?? 'Tidak ada data',
                                     lokasi: gempa['wilayah'] ?? 'Tidak ada data',
-                                    jarak: "${gempa['jarak'] ?? 'Tidak ada data'} km",
+                                    jarak: "${gempa['jarak'] ?? '-'} km",
                                     jam: gempa['jam'] != null 
                                         ? gempa['jam'].substring(0, 5) + " WIB"
                                         : 'Tidak ada data',
