@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:aplikasi_pandhu/app/modules/warning/local_widgets/panduan.dart';
+import 'package:aplikasi_pandhu/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -85,7 +86,7 @@ class WarningView extends GetView<WarningController> {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                Get.back();
+                                Get.toNamed(Routes.HOME);
                               },
                               child: Container(
                                 width: 185,

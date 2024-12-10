@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 
 import '../modules/Report/bindings/report_binding.dart';
 import '../modules/Report/views/report_view.dart';
+import '../modules/artikel/bindings/artikel_binding.dart';
+import '../modules/artikel/views/artikel_view.dart';
 import '../modules/chat/bindings/chat_binding.dart';
 import '../modules/chat/views/chat_view.dart';
 import '../modules/detail_gempa/bindings/detail_gempa_binding.dart';
@@ -97,6 +99,11 @@ class AppPages {
       name: _Paths.DETAIL_GEMPA,
       page: () => Googlemapflutter(gempaData: Get.arguments),
       binding: DetailGempaBinding(),
+    ),
+    GetPage(
+      name: _Paths.ARTIKEL,
+      page: () => const ArtikelView(),
+      binding: ArtikelBinding(),
     ),
   ];
 }

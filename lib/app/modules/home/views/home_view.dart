@@ -349,9 +349,9 @@ class HomeView extends GetView<HomeController> {
                             children: const [
                               Artikel(),
                               SizedBox(width: 12),
-                              Artikel(),
-                              SizedBox(width: 12),
-                              Artikel()
+                              // Artikel(),
+                              // SizedBox(width: 12),
+                              // Artikel()
                             ],
                           ),
                         )
