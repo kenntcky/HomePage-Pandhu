@@ -51,7 +51,7 @@ class RiwayatView extends GetView<RiwayatController> {
                             Icon(Icons.wifi_off, color: Colors.orange),
                             SizedBox(width: 8),
                             Text(
-                              'Offline Mode - Showing local data',
+                              'Mode Offline - Menampilkan data lokal',
                               style: TextStyle(color: Colors.orange),
                             ),
                           ],

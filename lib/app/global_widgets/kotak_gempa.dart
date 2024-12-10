@@ -83,7 +83,6 @@ class Kotakgempa extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print("Tapped on Kotak Gempa");
         Get.toNamed(
           Routes.DETAIL_GEMPA,
           arguments: {
@@ -169,7 +168,7 @@ class Kotakgempa extends StatelessWidget {
                           ],
                           ),
                           Text(
-                            "${jam}",
+                            jam,
                             style: TextStyle(
                               color: Color(0xFF666666),
                               fontSize: 12,

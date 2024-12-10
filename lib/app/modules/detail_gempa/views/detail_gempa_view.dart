@@ -6,6 +6,7 @@ import 'package:latlong2/latlong.dart';
 import '../local_widgets/detail_eq.dart';
 import '../local_widgets/infosr.dart';
 import '../local_widgets/tsunami_potential.dart';
+import '../../../../utils/connectivity_utils.dart';
 
 class Googlemapflutter extends StatefulWidget {
   final Map<String, dynamic> gempaData;
@@ -22,29 +23,46 @@ class Googlemapflutter extends StatefulWidget {
 class _GooglemapflutterState extends State<Googlemapflutter> {
   late Map<String, dynamic> gempaData;
   List<double>? gempaCoordinates;
+  bool isOnline = true;
 
   @override
   void initState() {
     super.initState();
-    gempaData = Get.arguments;
+    gempaData = widget.gempaData;
     getGempaCoordinates();
+    checkConnectivity();
+  }
+
+  Future<void> checkConnectivity() async {
+    final hasInternet = await ConnectivityUtils.hasInternetConnection();
+    setState(() {
+      isOnline = hasInternet;
+    });
   }
 
   void getGempaCoordinates() {
+    print(gempaData['shakemap']);
     String coordinatesBMKG = gempaData['coordinates'] ?? '';
-
+    
     // Convert string coordinates to array
     List<String> parts = coordinatesBMKG.split(',');
     var coordinates = List<double>.filled(2, 0);
 
     if (parts.length == 2) {
-      coordinates[0] = double.parse(parts[0].trim());
-      coordinates[1] = double.parse(parts[1].trim());
+      try {
+        coordinates[0] = double.parse(parts[0].trim());
+        coordinates[1] = double.parse(parts[1].trim());
+        
+        setState(() {
+          gempaCoordinates = coordinates;
+        });
+      } catch (e) {
+        print('Error parsing coordinates: $e');
+        setState(() {
+          gempaCoordinates = [0, 0]; // Default coordinates if parsing fails
+        });
+      }
     }
-
-    setState(() {
-      gempaCoordinates = coordinates;
-    });
   }
 
   @override
@@ -54,30 +72,77 @@ class _GooglemapflutterState extends State<Googlemapflutter> {
         ? const Center(child: CircularProgressIndicator())
         : Stack(
         children: [
-          FlutterMap(
-            options: MapOptions(
-              initialCenter: LatLng(gempaCoordinates![0], gempaCoordinates![1]),
-              initialZoom: 7,
-            ),
-            children: [
-              TileLayer(
-                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                userAgentPackageName: 'com.sipandhu.aplikasi_pandhu',
-              ),
-              MarkerLayer(
-                markers: [
-                  Marker(
-                    point: LatLng(gempaCoordinates![0], gempaCoordinates![1]),
-                    child: Image.asset(
-                      'asset/img/icon/marker.png',
-                      width: 40,
-                      height: 40,
-                    ),
+          // Map container
+          isOnline 
+            ? FlutterMap(
+                options: MapOptions(
+                  initialCenter: LatLng(gempaCoordinates![0], gempaCoordinates![1]),
+                  initialZoom: 7,
+                ),
+                children: [
+                  TileLayer(
+                    urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    userAgentPackageName: 'com.sipandhu.aplikasi_pandhu',
+                  ),
+                  MarkerLayer(
+                    markers: [
+                      Marker(
+                        point: LatLng(gempaCoordinates![0], gempaCoordinates![1]),
+                        child: Image.asset(
+                          'asset/img/icon/marker.png',
+                          width: 40,
+                          height: 40,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
+              )
+            : Container(
+                width: double.infinity,
+                height: 300, // Adjust height as needed
+                child: gempaData['shakemap'] != null
+                  ? Image.memory(
+                      gempaData['shakemap'],
+                      fit: BoxFit.cover,
+                    )
+                  : const Center(
+                      child: Text(
+                        'Shakemap tidak tersedia',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontFamily: 'Plus Jakarta Sans',
+                        ),
+                      ),
+                    ),
               ),
-            ],
-          ),
+
+          // Offline indicator if needed
+          if (!isOnline)
+            Positioned(
+              top: 150,
+              left: 0,
+              right: 0,
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                margin: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  color: Colors.orange.shade100,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.wifi_off, color: Colors.orange),
+                    SizedBox(width: 8),
+                    Text(
+                      'Mode Offline - Menampilkan Shakemap',
+                      style: TextStyle(color: Colors.orange),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           Align(
             alignment: Alignment.topCenter,
             child: Column(
@@ -199,7 +264,7 @@ class _GooglemapflutterState extends State<Googlemapflutter> {
                                         DetailEq(
                                           headline: "Koordinat",
                                           detailicon: "asset/img/icon/coordinate.png",
-                                          detaildata: "${gempaData['lintang']}, ${gempaData['bujur']}"
+                                          detaildata: "${gempaCoordinates![0]}, ${gempaCoordinates![1]}"
                                         ),
                                         DetailEq(
                                           headline: "Jarak",
