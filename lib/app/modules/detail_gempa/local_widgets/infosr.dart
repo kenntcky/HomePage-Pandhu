@@ -36,6 +36,10 @@ final String namabawah;
 
   @override
   Widget build(BuildContext context) {
+    // Get theme and color scheme
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -52,8 +56,8 @@ final String namabawah;
             textAlign: TextAlign.center,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              color: Colors.black,
+            style: TextStyle(
+              color: colorScheme.onSurface,
               fontSize: 12,
               fontFamily: 'Plus Jakarta Sans',
               fontWeight: FontWeight.w600,
@@ -63,8 +67,8 @@ final String namabawah;
         const SizedBox(height: 4),
         Text(
           namabawah,
-          style: const TextStyle(
-            color: Color(0xFF666666),
+          style: TextStyle(
+            color: colorScheme.onSurface.withOpacity(0.6),
             fontSize: 12,
             fontFamily: 'Plus Jakarta Sans',
             fontWeight: FontWeight.w400,

@@ -8,14 +8,21 @@ import 'package:get/get.dart';
 import '../controllers/home_controller.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:aplikasi_pandhu/app/modules/permission/controllers/permission_controller.dart';
+import 'package:aplikasi_pandhu/app/controllers/theme_controller.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final ThemeController themeController = Get.find();
+    // Get current theme data
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F8FA),
+      // Use theme background color
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: Stack(
         children: [
           RefreshIndicator(
@@ -48,10 +55,11 @@ class HomeView extends GetView<HomeController> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text(
+                                  Text(
                                     'Lokasi Anda',
                                     style: TextStyle(
-                                      color: Color(0xFF666666),
+                                      // Use theme color with opacity for secondary text
+                                      color: colorScheme.onBackground.withOpacity(0.6),
                                       fontSize: 12,
                                       fontFamily: 'Plus Jakarta Sans',
                                       fontWeight: FontWeight.w400,
@@ -60,21 +68,23 @@ class HomeView extends GetView<HomeController> {
                                   FutureBuilder<List<Placemark>>(
                                     future: PermissionController().getPlacemarksFromPrefs(),
                                     builder: (context, snapshot) {
+                                      // Determine text color based on theme
+                                      Color textColor = colorScheme.onBackground;
                                       if (snapshot.connectionState == ConnectionState.waiting) {
-                                        return const Text(
+                                        return Text(
                                           'Memuat lokasi...',
                                           style: TextStyle(
-                                            color: Colors.black,
+                                            color: textColor,
                                             fontSize: 14,
                                             fontFamily: 'Plus Jakarta Sans',
                                             fontWeight: FontWeight.bold,
                                           ),
                                         );
                                       } else if (snapshot.hasError) {
-                                        return const Text(
+                                        return Text(
                                           'Gagal memuat lokasi.',
                                           style: TextStyle(
-                                            color: Colors.black,
+                                            color: textColor,
                                             fontSize: 14,
                                             fontFamily: 'Plus Jakarta Sans',
                                             fontWeight: FontWeight.bold,
@@ -84,18 +94,18 @@ class HomeView extends GetView<HomeController> {
                                         final placemark = snapshot.data![0];
                                         return Text(
                                           '${placemark.subAdministrativeArea}, ${placemark.administrativeArea}',
-                                          style: const TextStyle(
-                                            color: Colors.black,
+                                          style: TextStyle(
+                                            color: textColor,
                                             fontSize: 14,
                                             fontFamily: 'Plus Jakarta Sans',
                                             fontWeight: FontWeight.bold,
                                           ),
                                         );
                                       } else {
-                                        return const Text(
+                                        return Text(
                                           'Lokasi tidak ditemukan.',
                                           style: TextStyle(
-                                            color: Colors.black,
+                                            color: textColor,
                                             fontSize: 14,
                                             fontFamily: 'Plus Jakarta Sans',
                                             fontWeight: FontWeight.bold,
@@ -151,11 +161,13 @@ class HomeView extends GetView<HomeController> {
                         prefixIcon: const Icon(Icons.search),
                         hintText: "Cari informasi gempa",
                         contentPadding: EdgeInsets.zero,
-                        hintStyle: const TextStyle(
+                        hintStyle: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
+                          // Hint text color should also adapt
+                          color: colorScheme.onSurface.withOpacity(0.5),
                         ),
-                        fillColor: Colors.white,
+                        fillColor: colorScheme.surface,
                         filled: true,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),
@@ -165,13 +177,6 @@ class HomeView extends GetView<HomeController> {
                     ),
                   ),
                   
-                  const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () async {
-                        controller.refreshData();
-                      },
-                      child: Text('Simulate Earthquake Alert'),
-                    ),
                   const AlertGempa(),
                   const SizedBox(height: 20),
             
@@ -183,10 +188,11 @@ class HomeView extends GetView<HomeController> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
+                            Text(
                               'Gempa Terkini',
                               style: TextStyle(
-                                color: Colors.black,
+                                // Use theme color
+                                color: colorScheme.onBackground,
                                 fontSize: 20,
                                 fontFamily: 'Plus Jakarta Sans',
                                 fontWeight: FontWeight.w600,
@@ -196,9 +202,10 @@ class HomeView extends GetView<HomeController> {
                               onTap: () {
                                 Get.toNamed(Routes.RIWAYAT);
                               },
-                              child: const Text(
+                              child: Text(
                                 'Lebih Detail',
                                 style: TextStyle(
+                                  // Reverted to original blue color
                                   color: Color(0xFF3BABF6),
                                   fontSize: 14,
                                   fontFamily: 'Plus Jakarta Sans',
@@ -221,9 +228,10 @@ class HomeView extends GetView<HomeController> {
                           }
                           
                           if (controller.gempaList.isEmpty) {
-                            return const SizedBox(
+                            return SizedBox(
                               height: 230,
-                              child: Center(child: Text('Tidak ada data gempa')),
+                              // Use theme text color
+                              child: Center(child: Text('Tidak ada data gempa', style: TextStyle(color: colorScheme.onBackground))),
                             );
                           }
 
@@ -259,14 +267,15 @@ class HomeView extends GetView<HomeController> {
                   ),
             
                   // Gempa Sekitar Section
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.symmetric(horizontal: 15),
                     child: Row(
                       children: [
                         Text(
                           'Gempa Sekitar Anda 🚨',
                           style: TextStyle(
-                            color: Colors.black,
+                            // Use theme color
+                            color: colorScheme.onBackground,
                             fontSize: 20,
                             fontFamily: 'Plus Jakarta Sans',
                             fontWeight: FontWeight.w600,
@@ -285,10 +294,12 @@ class HomeView extends GetView<HomeController> {
                         }
                         
                         if (controller.gempaNearestList.isEmpty) {
-                          return const Center(
+                          return Center(
                             child: Text(
                               'Tidak ada data gempa terdekat',
                               style: TextStyle(
+                                // Use theme color
+                                color: colorScheme.onBackground,
                                 fontSize: 14,
                                 fontFamily: 'Plus Jakarta Sans',
                               ),
@@ -328,12 +339,13 @@ class HomeView extends GetView<HomeController> {
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: Column(
                       children: [
-                        const Row(
+                        Row(
                           children: [
                             Text(
                               'Artikel 📑',
                               style: TextStyle(
-                                color: Colors.black,
+                                // Use theme color
+                                color: colorScheme.onBackground,
                                 fontSize: 20,
                                 fontFamily: 'Plus Jakarta Sans',
                                 fontWeight: FontWeight.w600,
@@ -367,10 +379,12 @@ class HomeView extends GetView<HomeController> {
                     child: Container(
                       height: 190,
                       decoration: ShapeDecoration(
+                        // Reverted to original hardcoded blue
                         color: const Color(0xFF4EB8FF),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
+                        // Reverted to original hardcoded shadow color
                         shadows: const [
                           BoxShadow(
                             color: Color(0x994FB8FF),
@@ -386,13 +400,14 @@ class HomeView extends GetView<HomeController> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Column(
+                            Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   'Informasi Bantuan Gempa',
                                   style: TextStyle(
+                                    // Reverted to original hardcoded white
                                     color: Colors.white,
                                     fontSize: 20,
                                     fontFamily: 'Plus Jakarta Sans',
@@ -405,7 +420,8 @@ class HomeView extends GetView<HomeController> {
                                   child: Text(
                                     'Hubungi BMKG atau BPBD kota Anda untuk mendapatkan informasi terperinci',
                                     style: TextStyle(
-                                      color: Color(0xFFB9E3FF),
+                                      // Reverted to original hardcoded light blue
+                                      color: const Color(0xFFB9E3FF),
                                       fontSize: 14,
                                       fontFamily: 'Plus Jakarta Sans',
                                       fontWeight: FontWeight.w400,
@@ -442,7 +458,7 @@ class HomeView extends GetView<HomeController> {
                     child: Container(
                       height: 158,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: colorScheme.surface,
                         borderRadius: BorderRadius.circular(10)
                       ),
                       child: Padding(
@@ -450,7 +466,7 @@ class HomeView extends GetView<HomeController> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            const Column(
+                            Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text.rich(
@@ -459,7 +475,7 @@ class HomeView extends GetView<HomeController> {
                                       TextSpan(
                                         text: 'Menemukan Kesalahan \ndi Aplikasi ',
                                         style: TextStyle(
-                                          color: Colors.black,
+                                          color: colorScheme.onSurface,
                                           fontSize: 20,
                                           fontFamily: 'Plus Jakarta Sans',
                                           fontWeight: FontWeight.w600,
@@ -468,7 +484,7 @@ class HomeView extends GetView<HomeController> {
                                       TextSpan(
                                         text: 'Pandhu?',
                                         style: TextStyle(
-                                          color: Color(0xFFF6643C),
+                                          color: colorScheme.error,
                                           fontSize: 20,
                                           fontFamily: 'Plus Jakarta Sans',
                                           fontWeight: FontWeight.w600,
@@ -484,7 +500,7 @@ class HomeView extends GetView<HomeController> {
                                       TextSpan(
                                         text: 'Hubungi tim kami melalui ',
                                         style: TextStyle(
-                                          color: Color(0xFF636363),
+                                          color: colorScheme.onSurface.withOpacity(0.6),
                                           fontSize: 14,
                                           fontFamily: 'Plus Jakarta Sans',
                                           fontWeight: FontWeight.w400,
@@ -493,7 +509,7 @@ class HomeView extends GetView<HomeController> {
                                       TextSpan(
                                         text: 'email \n',
                                         style: TextStyle(
-                                          color: Color(0xFF636363),
+                                          color: colorScheme.onSurface.withOpacity(0.6),
                                           fontSize: 14,
                                           fontStyle: FontStyle.italic,
                                           fontFamily: 'Plus Jakarta Sans',
@@ -503,7 +519,7 @@ class HomeView extends GetView<HomeController> {
                                       TextSpan(
                                         text: 'sipanduofficial@gmail.com',
                                         style: TextStyle(
-                                          color: Color(0xFF636363),
+                                          color: colorScheme.onSurface.withOpacity(0.6),
                                           fontSize: 14,
                                           fontFamily: 'Plus Jakarta Sans',
                                           fontWeight: FontWeight.w400,
@@ -526,10 +542,10 @@ class HomeView extends GetView<HomeController> {
                   // Footer
                   Column(
                     children: [
-                      const Text(
+                      Text(
                         'Powered by',
                         style: TextStyle(
-                          color: Color(0xFF666666),
+                          color: colorScheme.onBackground.withOpacity(0.6),
                           fontSize: 16,
                           fontFamily: 'Plus Jakarta Sans',
                           fontWeight: FontWeight.w600,
@@ -547,6 +563,32 @@ class HomeView extends GetView<HomeController> {
                     ],
                   ),
                   const SizedBox(height: 151),
+                  const SizedBox(height: 20),
+                  // Theme Toggle Switch
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Dark Mode',
+                          style: TextStyle(
+                            fontSize: 16,
+                            // Use theme color
+                            color: colorScheme.onBackground,
+                          ),
+                        ),
+                        Obx(() => Switch(
+                              value: themeController.isDarkMode,
+                              onChanged: (value) {
+                                themeController.toggleTheme();
+                              },
+                              activeColor: colorScheme.primary,
+                            )),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 80), // Add space below switch to avoid navbar overlap
                 ]),
               ],
             ),

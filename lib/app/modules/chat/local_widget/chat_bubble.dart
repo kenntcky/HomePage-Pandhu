@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:markdown/markdown.dart' as md;
 
 import 'avatar.dart';
 
@@ -30,7 +31,35 @@ class ChatBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isOnLeft = direction == Direction.left;
+    // Get theme and color scheme
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+    final bool isOnLeft = direction == Direction.left;
+
+    // Determine bubble background and text color based on direction
+    final Color bubbleColor = isOnLeft ? colorScheme.surface : colorScheme.primaryContainer;
+    final Color textColor = isOnLeft ? colorScheme.onSurface : colorScheme.onPrimaryContainer;
+
+    // Define Markdown style based on text color
+    final MarkdownStyleSheet markdownStyle = MarkdownStyleSheet.fromTheme(theme).copyWith(
+      p: theme.textTheme.bodyMedium?.copyWith(color: textColor),
+      // Define other styles (h1, code, blockquote, etc.) if needed, inheriting text color
+      h1: theme.textTheme.headlineLarge?.copyWith(color: textColor),
+      h2: theme.textTheme.headlineMedium?.copyWith(color: textColor),
+      h3: theme.textTheme.headlineSmall?.copyWith(color: textColor),
+      h4: theme.textTheme.titleLarge?.copyWith(color: textColor),
+      h5: theme.textTheme.titleMedium?.copyWith(color: textColor),
+      h6: theme.textTheme.titleSmall?.copyWith(color: textColor),
+      em: const TextStyle(fontStyle: FontStyle.italic),
+      strong: const TextStyle(fontWeight: FontWeight.bold),
+      code: theme.textTheme.bodyMedium?.copyWith(
+        color: textColor.withOpacity(0.8),
+        backgroundColor: colorScheme.onSurface.withOpacity(0.05),
+        fontFamily: 'monospace',
+      ),
+      // Add more styles as required
+    );
+
     return Padding(
       padding: const EdgeInsets.only(top: 20),
       child: Row(
@@ -46,9 +75,18 @@ class ChatBubble extends StatelessWidget {
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               borderRadius: _borderRadius(direction, type),
-              color: isOnLeft ? Colors.white : const Color.fromARGB(255, 255, 255, 255),
+              // Use themed bubble color
+              color: bubbleColor,
             ),
-            child: MarkdownBody(data: message),
+            // Apply themed markdown style
+            child: MarkdownBody(
+              data: message,
+              styleSheet: markdownStyle,
+              // Ensure selectable text if desired
+              selectable: true, 
+              onTapLink: (text, href, title) { /* Handle link taps if needed */ },
+              // Use appropriate builders if custom markdown elements are needed
+            ),
           ),
         ],
       ),

@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import '../local_widget/chat_bubble.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../services/groq_service.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:permission_handler/permission_handler.dart';
 
 class ChatView extends StatefulWidget {
   const ChatView({super.key});
@@ -11,12 +13,16 @@ class ChatView extends StatefulWidget {
   State<ChatView> createState() => _ChatViewState();
 }
 
-class _ChatViewState extends State<ChatView> {
+class _ChatViewState extends State<ChatView> with SingleTickerProviderStateMixin {
   final groqService = GroqService(apiKey: dotenv.env['GROQ_API_KEY']!);
+  final stt.SpeechToText _speech = stt.SpeechToText();
   
   TextEditingController messageController = TextEditingController();
-
+  bool isListening = false;
   bool isLoading = false;
+  bool _speechEnabled = false;
+  late AnimationController _micAnimationController;
+  late Animation<double> _micAnimation;
 
   List<ChatBubble> chatBubbles = [
     const ChatBubble(
@@ -27,8 +33,132 @@ class _ChatViewState extends State<ChatView> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _initSpeech();
+    _micAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _micAnimation = Tween(begin: 1.0, end: 1.2).animate(
+      CurvedAnimation(
+        parent: _micAnimationController,
+        curve: Curves.easeInOut,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _micAnimationController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _initSpeech() async {
+    try {
+      _speechEnabled = await _speech.initialize(
+        onStatus: (status) {
+          print('Speech status: $status');
+          if (status == 'notListening' || status == 'done') {
+            setState(() => isListening = false);
+            _micAnimationController.reverse();
+          }
+        },
+        onError: (error) {
+          print('Speech error: $error');
+          setState(() {
+            isListening = false;
+            _micAnimationController.reverse();
+          });
+          _showErrorSnackBar('Error: ${error.errorMsg}');
+        },
+      );
+      setState(() {});
+    } catch (e) {
+      print('Speech initialization error: $e');
+      _showErrorSnackBar('Failed to initialize speech recognition');
+    }
+  }
+
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+
+  Future<void> _requestMicrophonePermission() async {
+    final status = await Permission.microphone.request();
+    if (status.isDenied) {
+      _showErrorSnackBar('Microphone permission is required for speech recognition');
+    }
+  }
+
+  Future<void> _startListening() async {
+    if (!_speechEnabled) {
+      await _initSpeech();
+    }
+
+    final micPermission = await Permission.microphone.status;
+    if (micPermission.isDenied) {
+      await _requestMicrophonePermission();
+      return;
+    }
+
+    if (!isListening) {
+      try {
+        final available = await _speech.initialize();
+        if (available) {
+          setState(() {
+            isListening = true;
+            messageController.text = ''; // Clear existing text
+          });
+          _micAnimationController.forward();
+          
+          await _speech.listen(
+            onResult: (result) {
+              setState(() {
+                // Update text in real-time with interim results
+                messageController.text = result.recognizedWords;
+                // Move cursor to end
+                messageController.selection = TextSelection.fromPosition(
+                  TextPosition(offset: messageController.text.length),
+                );
+              });
+            },
+            listenFor: const Duration(seconds: 10), // Maximum listening duration
+            partialResults: true, // Enable interim results
+            localeId: 'id_ID',
+            cancelOnError: true,
+            listenMode: stt.ListenMode.dictation, // Change to dictation mode for better continuous recognition
+          );
+        }
+      } catch (e) {
+        print('Error starting speech recognition: $e');
+        _showErrorSnackBar('Failed to start speech recognition');
+        setState(() {
+          isListening = false;
+          _micAnimationController.reverse();
+        });
+      }
+    } else {
+      _speech.stop();
+      setState(() => isListening = false);
+      _micAnimationController.reverse();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // Get theme and color scheme
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+
     return Scaffold(
+      // Explicitly set background color, as default might be different from AppBar
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         leading: CupertinoButton(
           child: Image.asset("asset/img/icon/arrow-left.png"),
@@ -74,7 +204,7 @@ class _ChatViewState extends State<ChatView> {
             Image.asset("asset/img/icon/more.png")
           ],
         ),
-        backgroundColor: const Color(0xFFF6643C),
+        backgroundColor: const Color(0xFFF6643C), // Keep fixed orange AppBar
       ),
       body: Column(
         children: [
@@ -89,28 +219,63 @@ class _ChatViewState extends State<ChatView> {
           ),
           Container(
             padding: const EdgeInsets.all(16),
+            // Set container background to match themed Scaffold background
+            color: theme.scaffoldBackgroundColor, 
             child: Row(
               children: [
+                ScaleTransition(
+                  scale: _micAnimation,
+                  child: IconButton(
+                    icon: Icon(
+                      isListening ? Icons.mic : Icons.mic_none,
+                      // Use theme colors for mic icon states
+                      color: isListening ? colorScheme.error : colorScheme.onSurface.withOpacity(0.6),
+                    ),
+                    onPressed: _startListening,
+                  ),
+                ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 16),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: TextField(
                       controller: messageController,
-                      decoration: const InputDecoration(
+                      // Style TextField based on theme
+                      style: TextStyle(color: colorScheme.onSurface),
+                      decoration: InputDecoration(
                         hintText: 'Ketik Pesan',
+                        // Use theme hint color
+                        hintStyle: TextStyle(color: colorScheme.onSurface.withOpacity(0.5)),
+                        // Use filled style with surface color
+                        filled: true,
+                        fillColor: colorScheme.surface,
+                        // Adjust border based on theme (e.g., subtle or none)
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30), // Keep consistent radius?
+                          borderSide: BorderSide.none, // No border for a cleaner look
+                        ),
+                        // Focused border (optional, can add subtle primary color)
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide(color: colorScheme.primary, width: 1.5), // Subtle primary focus indicator
+                        ),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10), // Adjust padding
                       ),
                     ),
                   ),
                 ),
                 isLoading
-                    ? const CircularProgressIndicator.adaptive()
+                    ? CircularProgressIndicator.adaptive( 
+                        // Ensure progress indicator color fits theme
+                        valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
+                      )
                     : Stack(
                         children: [
                           Container(
                             width: 48,
                             height: 48,
                             decoration: ShapeDecoration(
-                                color: Color(0xFFF6643C),
+                                // Keep fixed orange send button background
+                                color: const Color(0xFFF6643C),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(58))),
                           ),

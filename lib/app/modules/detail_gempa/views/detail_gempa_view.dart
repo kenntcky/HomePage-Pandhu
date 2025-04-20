@@ -68,7 +68,13 @@ class _GooglemapflutterState extends State<Googlemapflutter> {
 
   @override
   Widget build(BuildContext context) {
+    // Get theme and color scheme
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+
     return Scaffold(
+      // Use theme background color
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: gempaCoordinates == null
         ? const Center(child: CircularProgressIndicator())
         : Stack(
@@ -107,12 +113,14 @@ class _GooglemapflutterState extends State<Googlemapflutter> {
                       gempaData['shakemap'],
                       fit: BoxFit.cover,
                     )
-                  : const Center(
+                  : Center(
                       child: Text(
                         'Shakemap tidak tersedia',
                         style: TextStyle(
                           fontSize: 16,
                           fontFamily: 'Plus Jakarta Sans',
+                          // Reverted to white as requested
+                          color: Colors.white,
                         ),
                       ),
                     ),
@@ -150,12 +158,19 @@ class _GooglemapflutterState extends State<Googlemapflutter> {
               children: [
                 AppBar(
                   toolbarHeight: 78,
-                  title: const Text('Informasi Gempa'),
+                  title: Text(
+                    'Informasi Gempa', 
+                    // Use AppBar theme for title style automatically
+                    // style: TextStyle(color: colorScheme.onPrimary), 
+                  ),
                   leading: IconButton(
-                    icon: const Icon(Icons.arrow_back),
+                    // Icon color should be handled by AppBar theme
+                    icon: Icon(Icons.arrow_back /*, color: colorScheme.onPrimary*/),
                     onPressed: () => Get.back(),
                   ),
                   centerTitle: true,
+                  // Use AppBar theme for background color automatically
+                  // backgroundColor: colorScheme.primary, 
                 ),
               ],
             ),
@@ -166,8 +181,9 @@ class _GooglemapflutterState extends State<Googlemapflutter> {
             maxChildSize: 0.57,
             builder: (context, scrollController) {
               return Container(
-                decoration: const BoxDecoration(
-                  // color: Colors.white,
+                decoration: BoxDecoration(
+                  // Removed background color to make sheet transparent
+                  // color: colorScheme.surface,
                   borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                 ),
                 child: Column(
@@ -179,7 +195,8 @@ class _GooglemapflutterState extends State<Googlemapflutter> {
                       height: 4,
                       margin: const EdgeInsets.only(bottom: 20),
                       decoration: BoxDecoration(
-                        color: Colors.grey[300],
+                        // Use a less prominent theme color
+                        color: colorScheme.onSurface.withOpacity(0.4),
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
@@ -197,9 +214,12 @@ class _GooglemapflutterState extends State<Googlemapflutter> {
                                 // Your first container
                                 Container(
                                   height: 150,
-                                  decoration: const BoxDecoration(
+                                  decoration: BoxDecoration(
                                     borderRadius: BorderRadius.all(Radius.circular(20)),
-                                    color: Colors.white
+                                    // Use surface color
+                                    color: colorScheme.surface, 
+                                    // Removed the border property
+                                    // border: Border.all(color: colorScheme.outlineVariant ?? colorScheme.onSurface.withOpacity(0.12), width: 1)
                                   ),
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 10),
@@ -217,7 +237,8 @@ class _GooglemapflutterState extends State<Googlemapflutter> {
                                             Container(
                                               width: 1,
                                               height: 70,
-                                              color: const Color(0xFFCCCCCC),
+                                              // Use a subtle divider color
+                                              color: colorScheme.onSurface.withOpacity(0.12),
                                             ),
                                             infosr(
                                               satuangempa: gempaData['lokasi'],
@@ -227,7 +248,8 @@ class _GooglemapflutterState extends State<Googlemapflutter> {
                                             Container(
                                               width: 1,
                                               height: 70,
-                                              color: const Color(0xFFCCCCCC),
+                                              // Use a subtle divider color
+                                              color: colorScheme.onSurface.withOpacity(0.12),
                                             ),
                                             infosr(
                                               satuangempa: gempaData['kedalaman'],
@@ -249,7 +271,8 @@ class _GooglemapflutterState extends State<Googlemapflutter> {
                                 Container(
                                   height: 195,
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    // Use surface color for this container background
+                                    color: colorScheme.surface,
                                     borderRadius: BorderRadius.circular(24)
                                   ),
                                   child: Padding(

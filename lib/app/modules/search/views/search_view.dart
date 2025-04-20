@@ -12,12 +12,18 @@ class SearchView extends GetView<SearchPageController> {
 
   @override
   Widget build(BuildContext context) {
+    // Get theme and color scheme
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F7F7),
+      // Use theme background color
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: Column(
         children: [
           AppBar(
-                backgroundColor: Color(0xFFF7F7F7),
+                // Removed explicit background color, should use AppBarTheme
+                // backgroundColor: Color(0xFFF7F7F7),
                 title: Column(
                   children: [
                     Row(
@@ -32,10 +38,11 @@ class SearchView extends GetView<SearchPageController> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                            Text(
                               "Lokasi Anda,",
                               style: TextStyle(
-                                color: Color(0xFF666666),
+                                // Use onBackground with opacity
+                                color: colorScheme.onBackground.withOpacity(0.6),
                                 fontSize: 14,
                                 fontFamily: 'Plus Jakarta Sans',
                                 fontWeight: FontWeight.w400,
@@ -47,21 +54,25 @@ class SearchView extends GetView<SearchPageController> {
                             FutureBuilder<List<Placemark>>(
                               future: PermissionController().getPlacemarksFromPrefs(),
                               builder: (context, snapshot) {
+                                // Determine text color based on theme
+                                Color textColor = colorScheme.onBackground;
                                 if (snapshot.connectionState == ConnectionState.waiting) {
-                                  return const Text(
+                                  return Text(
                                     'Memuat lokasi...',
                                     style: TextStyle(
-                                      color: Colors.black,
+                                      // Use theme text color
+                                      color: textColor,
                                       fontSize: 14,
                                       fontFamily: 'Plus Jakarta Sans',
                                       fontWeight: FontWeight.bold,
                                     ),
                                   );
                                 } else if (snapshot.hasError) {
-                                  return const Text(
+                                  return Text(
                                     'Gagal memuat lokasi.',
                                     style: TextStyle(
-                                      color: Colors.black,
+                                      // Use theme text color
+                                      color: textColor,
                                       fontSize: 14,
                                       fontFamily: 'Plus Jakarta Sans',
                                       fontWeight: FontWeight.bold,
@@ -71,18 +82,20 @@ class SearchView extends GetView<SearchPageController> {
                                   final placemark = snapshot.data![0];
                                   return Text(
                                     '${placemark.subAdministrativeArea}, ${placemark.administrativeArea}',
-                                    style: const TextStyle(
-                                      color: Colors.black,
+                                    style: TextStyle(
+                                      // Use theme text color
+                                      color: textColor,
                                       fontSize: 14,
                                       fontFamily: 'Plus Jakarta Sans',
                                       fontWeight: FontWeight.bold,
                                     ),
                                   );
                                 } else {
-                                  return const Text(
+                                  return Text(
                                     'Lokasi tidak ditemukan.',
                                     style: TextStyle(
-                                      color: Colors.black,
+                                      // Use theme text color
+                                      color: textColor,
                                       fontSize: 14,
                                       fontFamily: 'Plus Jakarta Sans',
                                       fontWeight: FontWeight.bold,
@@ -106,9 +119,16 @@ class SearchView extends GetView<SearchPageController> {
                   autofocus: true,
                   onSubmitted: (input) => controller.searchEarthquakeData(input),
                   decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.search),
+                    prefixIcon: Icon(
+                      Icons.search, 
+                      // Use theme color for icon
+                      color: colorScheme.onSurface.withOpacity(0.6)
+                    ),
                     hintText: "Cari informasi gempa",
-                    fillColor: Colors.white,
+                    // Use theme color for hint text
+                    hintStyle: TextStyle(color: colorScheme.onSurface.withOpacity(0.5)),
+                    // Use surface color for TextField background
+                    fillColor: colorScheme.surface,
                     filled: true,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
@@ -117,13 +137,14 @@ class SearchView extends GetView<SearchPageController> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
                       'Hasil',
                       style: TextStyle(
-                        color: Colors.black,
+                        // Use theme text color
+                        color: colorScheme.onBackground,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
@@ -137,7 +158,7 @@ class SearchView extends GetView<SearchPageController> {
           Expanded(
             child: Obx(() {
               if (controller.searchResults.isEmpty) {
-                return const Center(child: Text('Tidak ada data'));
+                return Center(child: Text('Tidak ada data', style: TextStyle(color: colorScheme.onBackground)));
               } else {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),

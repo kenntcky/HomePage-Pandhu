@@ -84,51 +84,70 @@ class WarningView extends GetView<WarningController> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            GestureDetector(
-                              onTap: () {
-                                Get.toNamed(Routes.HOME);
-                              },
-                              child: Container(
-                                width: 185,
-                                height: 52,
-                                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                                decoration: ShapeDecoration(
-                                  shape: RoundedRectangleBorder(
-                                  side: BorderSide(width: 1, color: Colors.white),
-                                  borderRadius: BorderRadius.circular(12),
-                                  ),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                      'Keluar',
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 8),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Get.toNamed(Routes.HOME);
+                                  },
+                                  child: Container(
+                                    height: 52,
+                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                                    decoration: ShapeDecoration(
+                                      shape: RoundedRectangleBorder(
+                                        side: BorderSide(width: 1, color: Colors.white),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        'Keluar',
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 16,
                                           fontFamily: 'Plus Jakarta Sans',
                                           fontWeight: FontWeight.w600,
+                                        ),
                                       ),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                            GestureDetector(
-                              child: Container(
-                                width: 185,
-                                height: 52,
-                                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12)
-                                ),
-                                child: Center(
-                                  child: Text(
-                                      'Lanjutkan',
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 8),
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    final latestData = await controller.getLatestEarthquake();
+                                    if (latestData.isNotEmpty) {
+                                      Get.toNamed(
+                                        Routes.DETAIL_GEMPA,
+                                        arguments: latestData
+                                      );
+                                    } else {
+                                      Get.toNamed(Routes.HOME);
+                                    }
+                                  },
+                                  child: Container(
+                                    height: 52,
+                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(12)
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        'Lanjutkan',
                                         style: TextStyle(
                                           color: Color(0xFFF6643C),
                                           fontSize: 16,
                                           fontFamily: 'Plus Jakarta Sans',
                                           fontWeight: FontWeight.w600,
+                                        ),
                                       ),
+                                    ),
                                   ),
                                 ),
                               ),

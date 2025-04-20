@@ -11,6 +11,10 @@ class Artikel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get theme and color scheme
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+
     return GestureDetector(
       onTap: () {
         Get.toNamed(Routes.ARTIKEL);
@@ -19,7 +23,7 @@ class Artikel extends StatelessWidget {
         height: 288,
         width: 202,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: colorScheme.surface,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Padding(
@@ -38,7 +42,7 @@ class Artikel extends StatelessWidget {
                   Text(
                     'Pandhu',
                     style: TextStyle(
-                      color: Color(0xFFF6643C),
+                      color: colorScheme.error,
                       fontSize: 10,
                       fontFamily: 'Plus Jakarta Sans',
                       fontWeight: FontWeight.w600,
@@ -47,7 +51,7 @@ class Artikel extends StatelessWidget {
                   Text(
                     '10 Sep 2024',
                     style: TextStyle(
-                      color: Color(0xFF636363),
+                      color: colorScheme.onSurface.withOpacity(0.6),
                       fontSize: 10,
                       fontFamily: 'Plus Jakarta Sans',
                       fontWeight: FontWeight.w600,
@@ -65,7 +69,7 @@ class Artikel extends StatelessWidget {
                         Text(
                       'Mengenal Bahaya Gempa Bumi',
                       style: TextStyle(
-                        color: Colors.black,
+                        color: colorScheme.onSurface,
                         fontSize: 16,
                         fontFamily: 'Plus Jakarta Sans',
                         fontWeight: FontWeight.w600,
@@ -76,7 +80,7 @@ class Artikel extends StatelessWidget {
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        color: Color(0xFF636363),
+                        color: colorScheme.onSurface.withOpacity(0.6),
                         fontSize: 10,
                         fontFamily: 'Plus Jakarta Sans',
                         fontWeight: FontWeight.w400,
@@ -96,7 +100,7 @@ class Artikel extends StatelessWidget {
                               Text(
                                 'Baca',
                                 style: TextStyle(
-                                  color: Color(0xFF3BABF6),
+                                  color: colorScheme.primary,
                                   fontSize: 10,
                                   fontFamily: 'Plus Jakarta Sans',
                                   fontWeight: FontWeight.w600,

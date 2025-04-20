@@ -10,8 +10,13 @@ class RiwayatView extends GetView<RiwayatController> {
   const RiwayatView({super.key});
   @override
   Widget build(BuildContext context) {
+    // Get theme and color scheme
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+
     return Scaffold(
-      backgroundColor: Color(0xFFF7F7F7),
+      // Use theme background color
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: Stack(
         children: [
           RefreshIndicator(
@@ -20,7 +25,7 @@ class RiwayatView extends GetView<RiwayatController> {
               padding: const EdgeInsets.fromLTRB(11, 39, 11, 16),
               child: Column(
                 children: [
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -28,7 +33,7 @@ class RiwayatView extends GetView<RiwayatController> {
                         Text(
                           'Gempa Telah Terjadi 🔍',
                           style: TextStyle(
-                            color: Colors.black,
+                            color: colorScheme.onBackground,
                             fontSize: 20,
                             fontFamily: 'Plus Jakarta Sans',
                             fontWeight: FontWeight.w600,
@@ -65,7 +70,7 @@ class RiwayatView extends GetView<RiwayatController> {
                       }
                       
                       if (controller.gempaList.isEmpty) {
-                        return const Center(child: Text('Tidak ada data'));
+                        return Center(child: Text('Tidak ada data', style: TextStyle(color: colorScheme.onBackground)));
                       }
 
                       return GridView(

@@ -18,6 +18,14 @@ class _NavbarState extends State<Navbar> {
 
   @override
   Widget build(BuildContext context) {
+    // Get theme and color scheme for background
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+    // Define fixed colors for foreground elements
+    const Color activeColor = Color(0xFFF6643C); // Original orange
+    const Color inactiveColor = Color(0xFF666666); // Original grey
+    const Color centerButtonColor = Color(0xFFF6643C); // Original orange
+
     return Container(
       child: Stack(
         children: [
@@ -25,7 +33,8 @@ class _NavbarState extends State<Navbar> {
             alignment: Alignment.bottomCenter,
             child: Container(
               height: 82,
-              decoration: BoxDecoration(color: Colors.white),
+              // Use theme surface color for the background
+              decoration: BoxDecoration(color: colorScheme.surface),
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 68),
                 child: Row(
@@ -53,7 +62,8 @@ class _NavbarState extends State<Navbar> {
                             Text(
                               'Beranda',
                               style: TextStyle(
-                                color: isActive ? Color(0xFFF6643C) : Color(0xFF666666),
+                                // Use fixed active/inactive colors
+                                color: isActive ? activeColor : inactiveColor,
                                 fontSize: 12,
                                 fontFamily: 'Plus Jakarta Sans',
                                 fontWeight: FontWeight.w600,
@@ -85,7 +95,8 @@ class _NavbarState extends State<Navbar> {
                             Text(
                               'Riwayat',
                               style: TextStyle(
-                                color: isActive ? Color(0xFFF6643C) : Color(0xFF666666),
+                                // Use fixed active/inactive colors
+                                color: isActive ? activeColor : inactiveColor,
                                 fontSize: 12,
                                 fontFamily: 'Plus Jakarta Sans',
                                 fontWeight: FontWeight.w600,
@@ -113,7 +124,8 @@ class _NavbarState extends State<Navbar> {
                     width: 64,
                     height: 64,
                     decoration: ShapeDecoration(
-                      color: Color(0xFFF6643C),
+                      // Use fixed orange color
+                      color: centerButtonColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(50),
                       ),
@@ -130,7 +142,8 @@ class _NavbarState extends State<Navbar> {
                   'SiPandhu',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Color(0xFF666666),
+                    // Use fixed grey color
+                    color: inactiveColor,
                     fontSize: 12,
                     fontFamily: 'Plus Jakarta Sans',
                     fontWeight: FontWeight.w400,

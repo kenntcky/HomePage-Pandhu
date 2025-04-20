@@ -81,6 +81,10 @@ class Kotakgempa extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get theme and color scheme
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+
     return GestureDetector(
       onTap: () {
         Get.toNamed(
@@ -107,7 +111,7 @@ class Kotakgempa extends StatelessWidget {
             height: 210,
             width: 187,
             decoration: BoxDecoration(
-                color: Colors.white, 
+                color: colorScheme.surface,
                 borderRadius: BorderRadius.circular(10)
                 ),
             // alignment: Alignment.topCenter,
@@ -135,7 +139,7 @@ class Kotakgempa extends StatelessWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          color: Colors.black,
+                          color: colorScheme.onSurface,
                           fontSize: 16,
                           fontFamily: 'Plus Jakarta Sans',
                           fontWeight: FontWeight.w600,
@@ -159,7 +163,7 @@ class Kotakgempa extends StatelessWidget {
                               Text(
                               jarak,
                               style: TextStyle(
-                                color: Color(0xFF666666),
+                                color: colorScheme.onSurface.withOpacity(0.6),
                                 fontSize: 12,
                                 fontFamily: 'Plus Jakarta Sans',
                                 fontWeight: FontWeight.w400,
@@ -170,7 +174,7 @@ class Kotakgempa extends StatelessWidget {
                           Text(
                             jam,
                             style: TextStyle(
-                              color: Color(0xFF666666),
+                              color: colorScheme.onSurface.withOpacity(0.6),
                               fontSize: 12,
                               fontFamily: 'Plus Jakarta Sans',
                               fontWeight: FontWeight.w400,
@@ -191,7 +195,7 @@ class Kotakgempa extends StatelessWidget {
               width: 81,
               height: 33,
               decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.30000001192092896),
+                  color: colorScheme.surface.withOpacity(0.7),
                   borderRadius: BorderRadius.circular(50)),
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 2, horizontal: 10),
@@ -201,12 +205,12 @@ class Kotakgempa extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.warning_amber_rounded,
-                      color: Color(0xFFF6643C),
+                      color: colorScheme.error,
                     ),
                     Text(
                       '$magnitude M',
                       style: TextStyle(
-                        color: Color(0xFFF6643C),
+                        color: colorScheme.error,
                         fontSize: 12,
                         fontFamily: 'Plus Jakarta Sans',
                         fontWeight: FontWeight.w400,

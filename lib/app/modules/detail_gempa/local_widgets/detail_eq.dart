@@ -18,13 +18,17 @@ class DetailEq extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get theme and color scheme
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+
     return Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                        headline,
                                         style: TextStyle(
-                                        color: Color(0xFF666666),
+                                          color: colorScheme.onSurface.withOpacity(0.6),
                                           fontSize: 12,
                                           fontFamily: 'Plus Jakarta Sans',
                                           fontWeight: FontWeight.w400,
@@ -48,7 +52,7 @@ class DetailEq extends StatelessWidget {
                                           Text(
                                             detaildata,
                                             style: TextStyle(
-                                              color: Colors.black,
+                                              color: colorScheme.onSurface,
                                               fontSize: 16,
                                               fontFamily: 'Plus Jakarta Sans',
                                               fontWeight: FontWeight.w600,

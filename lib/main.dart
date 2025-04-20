@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'app/routes/app_pages.dart';
-import 'package:workmanager/workmanager.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -16,6 +15,9 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'dart:math' show cos, sqrt, asin;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'app/controllers/theme_controller.dart';
+import 'app/utils/theme.dart';
+import 'app/global_widgets/nav_bar.dart'; // Import NavbarController
 
 // Initialize notifications
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -33,29 +35,6 @@ void initializeNotifications() {
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("Handling a background message: ${message.messageId}");
-}
-
-
-// WorkManager callback dispatcher
-@pragma(
-    'vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
-void callbackDispatcher() {
-  Workmanager().executeTask((task, inputData) async {
-    print("Native called background task: $task");
-
-    try {
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
-      print("Firebase Initialized");
-    } catch (e) {
-      print('Firebase already initialized: $e');
-    }
-
-    readData();
-
-    return Future.value(true);
-  });
 }
 
 // Function to download the image and convert it to bytes
@@ -405,7 +384,12 @@ void main() async {
     print("Error loading environment: $e");
   }
   
+  // Initialize Controllers early
+  Get.put(ThemeController());
+  Get.put(NavbarController()); // Add NavbarController here
+
   await DatabaseHelper().initDatabase();
+  String initialRoute = await determineInitialRoute(); // Determine initial route
 
   try {
     await Firebase.initializeApp(
@@ -428,30 +412,44 @@ void main() async {
     // Subscribe to the 'earthquake-updates' topic
     await messaging.subscribeToTopic('earthquake-updates');
 
-    // Cancel any existing tasks before registering a new one
-    await Workmanager().cancelAll();
-
-    // Initialize WorkManager with error handling
+    // Start reading data immediately
     readData();
-    await Workmanager().initialize(
-      callbackDispatcher,
-      isInDebugMode: false
-    );
-    await Workmanager().registerOneOffTask(
-      "task-identifier", 
-      "simpleTask",
-    ).catchError((error) {
-      print("Failed to register WorkManager task: $error");
-    });
-
+    
     HomeController().getHumanReadable();
     
     runApp(
-      GetMaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: "Application",
-        initialRoute: await determineInitialRoute(),
-        getPages: AppPages.routes
+      GetX<ThemeController>(
+        builder: (themeController) {
+          return GetMaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: "Application",
+            theme: lightThemeData,
+            darkTheme: darkThemeData,
+            themeMode: themeController.themeMode,
+            initialRoute: initialRoute,
+            getPages: AppPages.routes,
+            routingCallback: (routing) { // Add routingCallback
+              // Update navbar index based on current route
+              final String currentRoute = routing?.current ?? '';
+              // Use tryFind to avoid errors if controller isn't ready yet
+              final NavbarController? navbarController = Get.isRegistered<NavbarController>() 
+                                                          ? Get.find<NavbarController>() 
+                                                          : null;
+
+              if (navbarController != null) {
+                  if (currentRoute == Routes.HOME) {
+                    navbarController.changePage(0);
+                  } else if (currentRoute == Routes.RIWAYAT) {
+                    navbarController.changePage(1);
+                  }
+                  // Add other main routes here if needed
+                  // else {
+                  //   // Optional: handle routes not meant to be highlighted by navbar
+                  // } 
+              }
+            },
+          );
+        }
       ),
     );
   } catch (e) {
