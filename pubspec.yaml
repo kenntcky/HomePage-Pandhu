@@ -96,7 +96,6 @@
       - asset/img/logo/
       - asset/img/icon/
       - asset/img/image/
-      - asset/animations/
       - .env
     # - asset/fonts/
   # An image asset can refer to one or more resolution-specific "variants", see

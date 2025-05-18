@@ -17,6 +17,7 @@ abstract class Routes {
   static const GANTILOK_EDITLOK = _Paths.GANTILOK_EDITLOK;
   static const DETAIL_GEMPA = _Paths.DETAIL_GEMPA;
   static const ARTIKEL = _Paths.ARTIKEL;
+  static const POSKO = _Paths.POSKO;
 }
 
 abstract class _Paths {
@@ -35,4 +36,5 @@ abstract class _Paths {
   static const GANTILOK_EDITLOK = '/gantilok-editlok';
   static const DETAIL_GEMPA = '/detail-gempa';
   static const ARTIKEL = '/artikel';
+  static const POSKO = '/posko';
 }
