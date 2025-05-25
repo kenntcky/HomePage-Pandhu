@@ -217,13 +217,18 @@ class HomeView extends GetView<HomeController> {
                   const SizedBox(height: 20),
 
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 50),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Round(
-                          image: 'asset/img/image/artikel_round.png',
-                          text: 'Artikel'
+                        GestureDetector(
+                          onTap: () {
+                                Get.toNamed(Routes.MAIN_ARTIKEL);
+                              },
+                          child: Round(
+                            image: 'asset/img/image/artikel_round.png',
+                            text: 'Artikel'
+                          ),
                         ),
                         GestureDetector(
                           onTap: () {
@@ -237,14 +242,6 @@ class HomeView extends GetView<HomeController> {
                         Round(
                           image: 'asset/img/image/bantuan_round.png',
                           text: 'Bantuan'
-                        ),
-                        Round(
-                          image: 'asset/img/image/artikel_round.png',
-                          text: 'Lainnya'
-                        ),
-                        Round(
-                          image: 'asset/img/image/artikel_round.png',
-                          text: 'Lainnya'
                         ),
                       ],
                     ),
@@ -637,29 +634,6 @@ class HomeView extends GetView<HomeController> {
                   const SizedBox(height: 151),
                   const SizedBox(height: 20),
                   // Theme Toggle Switch
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Dark Mode',
-                          style: TextStyle(
-                            fontSize: 16,
-                            // Use theme color
-                            color: colorScheme.onBackground,
-                          ),
-                        ),
-                        Obx(() => Switch(
-                              value: themeController.isDarkMode,
-                              onChanged: (value) {
-                                themeController.toggleTheme();
-                              },
-                              activeColor: colorScheme.primary,
-                            )),
-                      ],
-                    ),
-                  ),
                   const SizedBox(height: 80), // Add space below switch to avoid navbar overlap
                 ]),
               ],

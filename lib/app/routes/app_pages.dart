@@ -16,6 +16,8 @@ import '../modules/gantilok_success/bindings/gantilok_success_binding.dart';
 import '../modules/gantilok_success/views/gantilok_success_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
+import '../modules/main_artikel/bindings/main_artikel_binding.dart';
+import '../modules/main_artikel/views/main_artikel_view.dart';
 import '../modules/onboarding/bindings/onboarding_binding.dart';
 import '../modules/onboarding/views/onboarding_view.dart';
 import '../modules/permission/bindings/permission_binding.dart';
@@ -111,6 +113,11 @@ class AppPages {
       name: _Paths.POSKO,
       page: () => const PoskoView(),
       binding: PoskoBinding(),
+    ),
+    GetPage(
+      name: _Paths.MAIN_ARTIKEL,
+      page: () => const MainArtikelView(),
+      binding: MainArtikelBinding(),
     ),
   ];
 }
