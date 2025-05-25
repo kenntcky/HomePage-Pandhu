@@ -244,7 +244,7 @@ class Standby extends StatelessWidget {
         decoration: ShapeDecoration(
           color: alertColor, // Use hardcoded green
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(15),
           ),
            shadows: [
             BoxShadow(
@@ -275,7 +275,7 @@ class Standby extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    SizedBox(height: 15),
+                    SizedBox(height: 30),
                     Text(
                       'Tidak ada gempa terdeteksi di sekitar Anda saat ini.',
                       maxLines: 3,

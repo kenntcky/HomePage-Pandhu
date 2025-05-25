@@ -16,10 +16,14 @@ import '../modules/gantilok_success/bindings/gantilok_success_binding.dart';
 import '../modules/gantilok_success/views/gantilok_success_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
+import '../modules/main_artikel/bindings/main_artikel_binding.dart';
+import '../modules/main_artikel/views/main_artikel_view.dart';
 import '../modules/onboarding/bindings/onboarding_binding.dart';
 import '../modules/onboarding/views/onboarding_view.dart';
 import '../modules/permission/bindings/permission_binding.dart';
 import '../modules/permission/views/permission_view.dart';
+import '../modules/posko/bindings/posko_binding.dart';
+import '../modules/posko/views/posko_view.dart';
 import '../modules/riwayat/bindings/riwayat_binding.dart';
 import '../modules/riwayat/views/riwayat_view.dart';
 import '../modules/search/bindings/search_binding.dart';
@@ -104,6 +108,16 @@ class AppPages {
       name: _Paths.ARTIKEL,
       page: () => const ArtikelView(),
       binding: ArtikelBinding(),
+    ),
+    GetPage(
+      name: _Paths.POSKO,
+      page: () => const PoskoView(),
+      binding: PoskoBinding(),
+    ),
+    GetPage(
+      name: _Paths.MAIN_ARTIKEL,
+      page: () => const MainArtikelView(),
+      binding: MainArtikelBinding(),
     ),
   ];
 }
