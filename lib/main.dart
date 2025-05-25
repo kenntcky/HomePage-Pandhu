@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'app/routes/app_pages.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'firebase_options.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -394,6 +395,12 @@ void main() async {
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
+    );
+
+    // Ensure Firestore is initialized with settings
+    FirebaseFirestore.instance.settings = Settings(
+      persistenceEnabled: true,
+      cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
     );
 
     // Initialize Flutter Local Notifications plugin

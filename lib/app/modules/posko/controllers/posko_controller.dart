@@ -1,138 +1,75 @@
 import 'package:get/get.dart';
-import 'package:firebase_database/firebase_database.dart';
-import '../../../../database.dart';
-import '../../../../utils/connectivity_utils.dart';
+import 'package:aplikasi_pandhu/app/data/models/posko_model.dart';
+import 'package:aplikasi_pandhu/app/data/services/posko_service.dart';
+import 'package:latlong2/latlong.dart';
 
 class PoskoController extends GetxController {
-  final RxList<Map<String, dynamic>> poskoList = <Map<String, dynamic>>[].obs;
+  final PoskoService _poskoService = PoskoService();
+  
+  final RxList<PoskoModel> poskos = <PoskoModel>[].obs;
   final RxBool isLoading = true.obs;
-  final RxBool isOnline = true.obs;
-  final DatabaseReference _databaseRef = FirebaseDatabase.instance.ref('posko');
-  final dbHelper = DatabaseHelper();
+  final RxBool isError = false.obs;
+  final RxString errorMessage = ''.obs;
+  final Rx<PoskoModel?> selectedPosko = Rx<PoskoModel?>(null);
 
   @override
   void onInit() {
     super.onInit();
-    loadPoskoData();
+    fetchPoskos();
   }
 
-  Future<void> loadPoskoData() async {
+  // Fetch all poskos from Firestore
+  void fetchPoskos() {
+    isLoading.value = true;
+    isError.value = false;
+    
     try {
-      isLoading.value = true;
-      
-      final hasInternet = await ConnectivityUtils.hasInternetConnection();
-      isOnline.value = hasInternet;
-      print('Posko: Internet connection status: ${hasInternet ? 'Online' : 'Offline'}');
-
-      if (hasInternet) {
-        await _loadFromFirebase();
-      } else {
-        print('Posko: No internet connection, loading from SQLite');
-        await _loadFromSQLite();
-      }
+      _poskoService.getPoskos().listen(
+        (data) {
+          poskos.value = data;
+          isLoading.value = false;
+          
+          // Tidak otomatis memilih posko pertama
+          // Pengguna harus mengklik marker pada peta untuk memilih posko
+        },
+        onError: (error) {
+          isLoading.value = false;
+          isError.value = true;
+          errorMessage.value = 'Error fetching poskos: $error';
+          print('Error fetching poskos: $error');
+        }
+      );
     } catch (e) {
-      print('Posko: Error loading data: $e');
-      print('Posko: Falling back to SQLite data');
-      await _loadFromSQLite();
-    } finally {
       isLoading.value = false;
+      isError.value = true;
+      errorMessage.value = 'Error fetching poskos: $e';
+      print('Error fetching poskos: $e');
     }
   }
 
-  Future<void> _loadFromFirebase() async {
+  // Select a posko by ID
+  void selectPoskoById(String id) {
+    final posko = poskos.firstWhere((p) => p.id == id, orElse: () => poskos.first);
+    selectedPosko.value = posko;
+  }
+
+  // Get the currently selected posko's LatLng
+  LatLng getSelectedPoskoLatLng() {
+    final posko = selectedPosko.value;
+    if (posko != null) {
+      return LatLng(posko.latitude, posko.longitude);
+    }
+    // Default to Semarang if no posko is selected
+    return const LatLng(-6.984034, 110.409990);
+  }
+
+  // Add sample data to Firestore (call this method once to populate the database)
+  Future<void> addSampleData() async {
     try {
-      print('Posko: Starting Firebase data fetch');
-      final event = await _databaseRef.once();
-      final snapshot = event.snapshot;
-
-      if (snapshot.value != null) {
-        final data = Map<String, dynamic>.from(snapshot.value as Map);
-        print('Posko: Retrieved ${data.length} records from Firebase');
-        List<Map<String, dynamic>> poskos = [];
-
-        for (var entry in data.entries.toList()) {
-          final poskoData = _processPoskoData(entry);
-          if (poskoData != null) {
-            poskos.add(poskoData);
-          }
-        }
-
-        // Sync posko data to SQLite for offline use
-        await _syncPoskoToSQLite(poskos);
-        poskoList.value = poskos;
-      } else {
-        print('Posko: No data found in Firebase');
-        poskoList.value = [];
-      }
+      await _poskoService.addSamplePoskos();
+      fetchPoskos();
     } catch (e) {
-      print('Posko: Error fetching from Firebase: $e');
-      throw e;
+      print('Error adding sample data: $e');
     }
-  }
-
-  Map<String, dynamic>? _processPoskoData(MapEntry entry) {
-    try {
-      final key = entry.key;
-      final value = entry.value;
-      
-      return {
-        'id': key,
-        'nama': value['nama'] ?? 'Tidak ada nama',
-        'alamat': value['alamat'] ?? 'Tidak ada alamat',
-        'kota': value['kota'] ?? '',
-        'kodepos': value['kodepos'] ?? '',
-        'status': value['status'] ?? 'Tidak aktif',
-        'telepon': value['telepon'] ?? '',
-        'instagram': value['instagram'] ?? '',
-        'email': value['email'] ?? '',
-        'latitude': value['latitude'] ?? 0.0,
-        'longitude': value['longitude'] ?? 0.0,
-      };
-    } catch (e) {
-      print('Posko: Error processing posko data: $e');
-    }
-    return null;
-  }
-
-  Future<void> _syncPoskoToSQLite(List<Map<String, dynamic>> poskos) async {
-    try {
-      // Implementasi ini harus disesuaikan dengan struktur tabel SQLite yang ada
-      // Untuk sementara, kita hanya menampilkan log
-      print('Posko: Syncing ${poskos.length} poskos to SQLite');
-      // Implementasi sinkronisasi ke SQLite akan ditambahkan di sini
-    } catch (e) {
-      print('Posko: Error syncing to SQLite: $e');
-    }
-  }
-
-  Future<void> _loadFromSQLite() async {
-    try {
-      print('Posko: Loading data from SQLite');
-      // Implementasi ini harus disesuaikan dengan struktur tabel SQLite yang ada
-      // Untuk sementara, kita hanya menampilkan log dan menggunakan data dummy
-      poskoList.value = [
-        {
-          'id': 'dummy1',
-          'nama': 'Posko Darurat 1',
-          'alamat': 'Perumahan Permata Puri, Jl. Bukit Barisan Blok AIV No. 9, Bringin, Ngaliyan.',
-          'kota': 'Kota Semarang',
-          'kodepos': '50189',
-          'status': 'BUKA 24 JAM',
-          'telepon': '(024) 7628345 (08:00 - 16:00) / 115',
-          'instagram': 'basarnas_jateng',
-          'email': 'sar.semarang@basarnas.go.id',
-          'latitude': -6.984034,
-          'longitude': 110.409990,
-        }
-      ];
-      print('Posko: Successfully loaded dummy data from SQLite');
-    } catch (e) {
-      print('Posko: Error loading from SQLite: $e');
-      poskoList.value = [];
-    }
-  }
-
-  Future<void> refreshData() async {
-    await loadPoskoData();
   }
 }
